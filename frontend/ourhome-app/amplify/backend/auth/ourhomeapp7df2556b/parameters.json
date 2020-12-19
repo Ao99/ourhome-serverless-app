@@ -1,6 +1,6 @@
 {
     "identityPoolName": "ourhomeapp7df2556b_identitypool_7df2556b",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "ourhom7df2556b",
     "userPoolName": "ourhomeapp7df2556b_userpool_7df2556b",
     "autoVerifiedAttributes": [

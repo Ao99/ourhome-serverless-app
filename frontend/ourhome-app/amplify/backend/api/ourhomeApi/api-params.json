@@ -1,0 +1,73 @@
+{
+    "paths": [
+        {
+            "name": "/work/{date}",
+            "lambdaFunction": "ourhomeFunctionWork",
+            "privacy": {
+                "protected": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ],
+                "unauth": [
+                    "/GET"
+                ]
+            }
+        },
+        {
+            "name": "/user",
+            "lambdaFunction": "ourhomeFunctionUser",
+            "privacy": {
+                "protected": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ],
+                "unauth": [
+                    "/GET"
+                ]
+            }
+        }
+    ],
+    "resourceName": "ourhomeApi",
+    "apiName": "ourhomeApi",
+    "functionArns": [
+        {
+            "lambdaFunction": "ourhomeFunctionWork"
+        },
+        {
+            "lambdaFunction": "ourhomeFunctionUser"
+        }
+    ],
+    "privacy": {
+        "auth": 2,
+        "unauth": 2,
+        "authRoleName": "amplify-ourhomeapp-dev-155617-authRole",
+        "unAuthRoleName": "amplify-ourhomeapp-dev-155617-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "ourhomeFunctionWork",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "ourhomeFunctionUser",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ],
+    "uuid": "690fc9a9"
+}

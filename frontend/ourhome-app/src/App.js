@@ -2,6 +2,10 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
+import Amplify, { API } from 'aws-amplify';
+import config from './aws-exports';
+
+Amplify.configure(config);
 
 function App() {
   return (
