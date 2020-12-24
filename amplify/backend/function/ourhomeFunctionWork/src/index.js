@@ -70,7 +70,7 @@ exports.handler = async (event, context) => {
                         {
                             TableName: tableName,
                             Key: { 'date': date },
-                            UpdateExpression: `remove ${reqBody.key}`,
+                            UpdateExpression: `remove ${reqBody.workType}`,
                             ReturnValues:"UPDATED_NEW"
                         }
                     ).promise();
