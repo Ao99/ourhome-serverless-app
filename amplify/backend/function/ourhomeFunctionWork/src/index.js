@@ -1,41 +1,65 @@
 const AWS = require('aws-sdk');
 const dynamo = new AWS.DynamoDB.DocumentClient();
+const cognito = new AWS.CognitoIdentityServiceProvider({ region: process.env.REGION });
 
 exports.handler = async (event, context) => {
     //console.log('Received event:', JSON.stringify(event, null, 2));
-    AWS.config.update({ region: process.env.TABLE_REGION });
+    AWS.config.update({ region: process.env.REGION });
 
     let body;
     let statusCode = '200';
     const headers = {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "*"
     };
     let tableName = "ourhomeDbWork";
-    if(process.env.ENV && process.env.ENV !== "NONE") {
-      tableName = tableName + '-' + process.env.ENV;
-    }
 
     try {
+        if(process.env.ENV && process.env.ENV !== "NONE") {
+          tableName = tableName + '-' + process.env.ENV;
+        }
+        var now = new Date(new Date().getTime() - (300 * 60000)).toISOString();
         var date = event.pathParameters.date;
         var reqBody = event.body ? JSON.parse(event.body) : '{}';
 
         switch (event.httpMethod) {
             case 'GET':
-                body = await dynamo.get(
+                if(date == 'all') {
+                    body = await dynamo.scan(
+                        {
+                            TableName: tableName,
+                        }
+                    ).promise();
+                } else {
+                    body = await dynamo.get(
                         {
                             TableName: tableName,
                             Key: { 'date': date }
                         }
                     ).promise();
+                }
                 break;
             case 'POST':
+                // Get the unique ID given by cognito for this user, it is passed to lambda as part of a large string in event.requestContext.identity.cognitoAuthenticationProvider
+                var userSub = event.requestContext.identity.cognitoAuthenticationProvider.split(':')[2];
+                var params = {
+                    UserPoolId: 'ca-central-1_gXOKopZTh',
+                    Filter: `sub="${userSub}"`,
+                    Limit: 1
+                };
+                var cognitoRes = await cognito.listUsers(params).promise();
+                console.log("got cognitoRes:", cognitoRes);
+                var user = cognitoRes.Users[0];
+
                 body = await dynamo.update(
                         {
                             TableName: tableName,
                             Key: { 'date': date },
-                            UpdateExpression: `set ${reqBody.key} = :value`,
+                            UpdateExpression: `set ${reqBody.workType} = :username, ZUpdatedAt = :timeStamp`,
                             ExpressionAttributeValues:{
-                                ":value": reqBody.value
+                                ":username": user.Username,
+                                ":timeStamp": now
                             },
                             ReturnValues:"UPDATED_NEW"
                         }
