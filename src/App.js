@@ -72,7 +72,7 @@ function App() {
                 {
                   Object.keys(work).map(key => (
                     <span key={key}>
-                      {key} {work[key]}
+                      {key} - {work[key]}
                       <button onClick={() => deleteWork(work, key)}>Delete work</button>
                     </span>
                   ))

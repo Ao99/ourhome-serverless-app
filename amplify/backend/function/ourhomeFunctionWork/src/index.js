@@ -44,7 +44,7 @@ exports.handler = async (event, context) => {
                 // Get the unique ID given by cognito for this user, it is passed to lambda as part of a large string in event.requestContext.identity.cognitoAuthenticationProvider
                 var userSub = event.requestContext.identity.cognitoAuthenticationProvider.split(':')[2];
                 var params = {
-                    UserPoolId: 'ca-central-1_gXOKopZTh',
+                    UserPoolId: process.env.USERPOOLID,
                     Filter: `sub="${userSub}"`,
                     Limit: 1
                 };
@@ -56,7 +56,7 @@ exports.handler = async (event, context) => {
                         {
                             TableName: tableName,
                             Key: { 'date': date },
-                            UpdateExpression: `set ${reqBody.workType} = :username, ZUpdatedAt = :timeStamp`,
+                            UpdateExpression: `set ${reqBody.workType} = :username, updatedAt = :timeStamp`,
                             ExpressionAttributeValues:{
                                 ":username": user.Username,
                                 ":timeStamp": now
