@@ -1,5 +1,0 @@
-{
-    "tableName": "ourhomeDbWork",
-    "partitionKeyName": "date",
-    "partitionKeyType": "S"
-}
