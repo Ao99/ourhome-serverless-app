@@ -1,6 +1,6 @@
 {
   "auth": {
-    "ourhomeapp7df2556b": {
+    "ourhomeappb4a0dc00": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -9,10 +9,6 @@
   },
   "storage": {
     "ourhomeDbWork": {
-      "service": "DynamoDB",
-      "providerPlugin": "awscloudformation"
-    },
-    "ourhomeDbUser": {
       "service": "DynamoDB",
       "providerPlugin": "awscloudformation"
     }
@@ -36,25 +32,6 @@
           }
         }
       ]
-    },
-    "ourhomeFunctionUser": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "storage",
-          "resourceName": "ourhomeDbUser",
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "attributeEnvMap": {
-            "Name": "TABLE_NAME",
-            "Arn": "TABLE_ARN"
-          }
-        }
-      ]
     }
   },
   "api": {
@@ -65,14 +42,6 @@
         {
           "category": "function",
           "resourceName": "ourhomeFunctionWork",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "ourhomeFunctionUser",
           "attributes": [
             "Name",
             "Arn"

@@ -76,8 +76,8 @@
         "Layers": [],
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "amplify-ourhomeapp-dev-155617-deployment",
-          "S3Key": "amplify-builds/ourhomeFunctionWork-757a6768712b444e5554-build.zip"
+          "S3Bucket": "amplify-ourhomeapp-dev-212617-deployment",
+          "S3Key": "amplify-builds/ourhomeFunctionWork-7961356e4b336a6b5751-build.zip"
         }
       }
     },
@@ -87,12 +87,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "ourhomeappLambdaRoleb9916a73",
+            "ourhomeappLambdaRolefb7c2dd4",
             {
               "Fn::Join": [
                 "",
                 [
-                  "ourhomeappLambdaRoleb9916a73",
+                  "ourhomeappLambdaRolefb7c2dd4",
                   "-",
                   {
                     "Ref": "env"
