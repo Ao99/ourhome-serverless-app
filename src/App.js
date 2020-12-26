@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
-import { API } from 'aws-amplify';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import { getAllWorks, updateOneWork, deleteOneWork } from './service/WorkService.js';
 
-const apiName = 'ourhomeApi';
 const initialFormState = { date: '', workType: '' };
 
 function App() {
@@ -15,38 +14,20 @@ function App() {
   }, []);
 
   async function fetchWorks() {
-    var response = await API.get(apiName, `/work/all`, {})
-      .catch(err => {
-        console.log(err);
-      });
-    console.log( response ? response.Items : [] );
-    setWorks(response ? response.Items : []);
+    var allWorks = await getAllWorks();
+    console.log( allWorks ? allWorks.Items : [] );
+    setWorks(allWorks ? allWorks.Items : []);
   }
 
   async function createWork() {
     if (!formData.date || !formData.workType) return;
-    await API.post(apiName, `/work/${formData.date}`, {
-      body: {
-        workType: formData.workType,
-      }
-    }).then(() => {
-      fetchWorks();
-      // setFormData(initialFormState);
-    }).catch(err => {
-      console.log(err);
-    });
+    await updateOneWork(formData.date, formData.workType);
+    fetchWorks();
   }
 
-  async function deleteWork(work, workType) {
-    await API.del(apiName, `/work/${work.date}`, {
-      body: {
-        workType: workType,
-      }
-    }).then(() => {
-      fetchWorks();
-    }).catch(err => {
-      console.log(err);
-    });
+  async function deleteWork(date, workType) {
+    await deleteOneWork(date, workType);
+    fetchWorks();
   }
 
   return (
@@ -69,11 +50,12 @@ function App() {
           works.map(work => (
             <div key={work.date}>
               <div>
+                <span>Date: {work.date} | </span>
                 {
-                  Object.keys(work).map(key => (
+                  Object.keys(work).filter(key => key !== 'date' && key !== 'updatedAt').map(key => (
                     <span key={key}>
-                      {key} - {work[key]}
-                      <button onClick={() => deleteWork(work, key)}>Delete work</button>
+                        {key} - {work[key]} 
+                      <button onClick={() => deleteWork(work.date, key)}>Delete</button>
                     </span>
                   ))
                 }
