@@ -1,6 +1,6 @@
 {
   "auth": {
-    "ourhomeappb4a0dc00": {
+    "ourhomeappa7d331bb": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -14,7 +14,7 @@
     }
   },
   "function": {
-    "ourhomeFunctionWork": {
+    "ourhomeFuncWork": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
@@ -41,7 +41,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "ourhomeFunctionWork",
+          "resourceName": "ourhomeFuncWork",
           "attributes": [
             "Name",
             "Arn"

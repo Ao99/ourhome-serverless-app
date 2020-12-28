@@ -20,12 +20,12 @@ exports.handler = async (event, context) => {
           tableName = tableName + '-' + process.env.ENV;
         }
         var now = new Date(new Date().getTime() - (300 * 60000)).toISOString();
-        var date = event.pathParameters.date;
+        var month = event.pathParameters.month;
         var reqBody = event.body ? JSON.parse(event.body) : '{}';
 
         switch (event.httpMethod) {
             case 'GET':
-                if(date == 'all') {
+                if(month == 'all') {
                     body = await dynamo.scan(
                         {
                             TableName: tableName,
@@ -35,7 +35,7 @@ exports.handler = async (event, context) => {
                     body = await dynamo.get(
                         {
                             TableName: tableName,
-                            Key: { 'date': date }
+                            Key: { 'month': month }
                         }
                     ).promise();
                 }
@@ -49,13 +49,15 @@ exports.handler = async (event, context) => {
                     Limit: 1
                 };
                 var cognitoRes = await cognito.listUsers(params).promise();
-                console.log("got cognitoRes:", cognitoRes);
                 var user = cognitoRes.Users[0];
 
                 body = await dynamo.update(
                         {
                             TableName: tableName,
-                            Key: { 'date': date },
+                            Key: {
+                                'month': parseInt(month, 10),
+                                'day': parseInt(reqBody.day, 10)
+                            },
                             UpdateExpression: `set ${reqBody.workType} = :username, updatedAt = :timeStamp`,
                             ExpressionAttributeValues:{
                                 ":username": user.Username,
@@ -69,7 +71,10 @@ exports.handler = async (event, context) => {
                 body = await dynamo.update(
                         {
                             TableName: tableName,
-                            Key: { 'date': date },
+                            Key: {
+                                'month': parseInt(month, 10),
+                                'day': parseInt(reqBody.day, 10)
+                            },
                             UpdateExpression: `remove ${reqBody.workType}`,
                             ReturnValues:"UPDATED_NEW"
                         }
@@ -81,6 +86,7 @@ exports.handler = async (event, context) => {
     } catch (err) {
         statusCode = '400';
         body = err.message;
+        console.log(err);
     } finally {
         body = JSON.stringify(body);
     }

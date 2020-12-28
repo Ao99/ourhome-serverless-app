@@ -12,6 +12,13 @@
             "Type": "String"
         },
         
+        "sortKeyName": {
+            "Type": "String"
+        },
+        "sortKeyType": {
+            "Type": "String"
+        },
+        
         "tableName": {
             "Type": "String"
         }
@@ -33,16 +40,26 @@
                 "AttributeDefinitions": [
                   
                   {
-                      "AttributeName": "date",
-                      "AttributeType": "S"
+                      "AttributeName": "month",
+                      "AttributeType": "N"
+                  }  , 
+                  
+                  {
+                      "AttributeName": "day",
+                      "AttributeType": "N"
                   } 
                   
                 ],
                 "KeySchema": [
                   
                   {
-                    "AttributeName": "date",
+                    "AttributeName": "month",
                     "KeyType": "HASH"
+                  }  , 
+                  
+                  {
+                    "AttributeName": "day",
+                    "KeyType": "RANGE"
                   } 
                   
                 ],
@@ -110,6 +127,17 @@
         "PartitionKeyType": {
             "Value": {
                 "Ref": "partitionKeyType"
+            }
+        },
+        
+        "SortKeyName": {
+            "Value": {
+                "Ref": "sortKeyName"
+            }
+        },
+        "SortKeyType": {
+            "Value": {
+                "Ref": "sortKeyType"
             }
         },
         

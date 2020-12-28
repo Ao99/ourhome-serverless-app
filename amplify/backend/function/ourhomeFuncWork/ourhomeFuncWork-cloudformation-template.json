@@ -41,12 +41,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "ourhomeFunctionWork",
+            "ourhomeFuncWork",
             {
               "Fn::Join": [
                 "",
                 [
-                  "ourhomeFunctionWork",
+                  "ourhomeFuncWork",
                   "-",
                   {
                     "Ref": "env"
@@ -76,8 +76,8 @@
         "Layers": [],
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "amplify-ourhomeapp-dev-212617-deployment",
-          "S3Key": "amplify-builds/ourhomeFunctionWork-307452394e4e2b6e6634-build.zip"
+          "S3Bucket": "amplify-ourhomeapp-dev-15859-deployment",
+          "S3Key": "amplify-builds/ourhomeFuncWork-75505468737259415452-build.zip"
         }
       }
     },
@@ -87,12 +87,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "ourhomeappLambdaRolefb7c2dd4",
+            "ourhomeappLambdaRole2c678238",
             {
               "Fn::Join": [
                 "",
                 [
-                  "ourhomeappLambdaRolefb7c2dd4",
+                  "ourhomeappLambdaRole2c678238",
                   "-",
                   {
                     "Ref": "env"

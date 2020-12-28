@@ -14,15 +14,15 @@
         },
     
     
-          "functionourhomeFunctionWorkName": {
+          "functionourhomeFuncWorkName": {
             "Type": "String",
-            "Default": "functionourhomeFunctionWorkName"
+            "Default": "functionourhomeFuncWorkName"
           },
         
           
-          "functionourhomeFunctionWorkArn": {
+          "functionourhomeFuncWorkArn": {
             "Type": "String",
-            "Default": "functionourhomeFunctionWorkArn"
+            "Default": "functionourhomeFuncWorkArn"
           }
         
           
@@ -546,7 +546,7 @@
             ],
             "paths": {
               
-              "/work/{date}": {
+              "/work/{month}": {
                 "options": {
                   "consumes": [
                     "application/json"
@@ -638,7 +638,7 @@
                             
                             {
                                 
-                                "Ref": "functionourhomeFunctionWorkArn"
+                                "Ref": "functionourhomeFuncWorkArn"
                             },
                             
                             "/invocations"
@@ -651,7 +651,7 @@
                   }
                 }
               },
-              "/work/{date}/{proxy+}": {
+              "/work/{month}/{proxy+}": {
                 "options": {
                   "consumes": [
                     "application/json"
@@ -743,7 +743,7 @@
                           
                           {
                             
-                            "Ref": "functionourhomeFunctionWorkArn"
+                            "Ref": "functionourhomeFuncWorkArn"
                           },
                           
                           "/invocations"
@@ -800,12 +800,12 @@
                   
         
         
-        "functionourhomeFunctionWorkPermissionourhomeApi": {
+        "functionourhomeFuncWorkPermissionourhomeApi": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
                 "FunctionName": 
                     {
-                        "Ref":  "functionourhomeFunctionWorkName"
+                        "Ref":  "functionourhomeFuncWorkName"
                     },
                     
                     "Action": "lambda:InvokeFunction",
