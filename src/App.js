@@ -1,17 +1,24 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import { Auth } from 'aws-amplify';
+import { Authenticator, SignIn, SignUp, ConfirmSignUp, Greetings } from 'aws-amplify-react';
+import { Table } from 'react-bootstrap';
 import { getAllWorks, updateOneWork, deleteOneWork } from './service/WorkService.js';
 
-const initialFormState = { date: '', workType: '' };
+const initialFormState = { month: '', day: '', workType: '' };
 
 function App() {
+  const [isSignedin, setIsSignedin] = useState(false);
   const [works, setWorks] = useState([]);
   const [formData, setFormData] = useState(initialFormState);
 
   useEffect(() => {
     fetchWorks();
   }, []);
+
+  useEffect(() => {
+    console.log(isSignedin);
+  }, [isSignedin]);
 
   async function fetchWorks() {
     var allWorks = await getAllWorks();
@@ -20,42 +27,70 @@ function App() {
   }
 
   async function createWork() {
-    if (!formData.date || !formData.workType) return;
-    await updateOneWork(formData.date, formData.workType);
+    if (!isSignedin || !formData.month || !formData.day || !formData.workType) return;
+    await updateOneWork(formData.month, formData.day, formData.workType);
     fetchWorks();
   }
 
-  async function deleteWork(date, workType) {
-    await deleteOneWork(date, workType);
+  async function deleteWork(month, day, workType) {
+    if (!isSignedin) return;
+    await deleteOneWork(month, day, workType);
     fetchWorks();
+  }
+  
+  async function checkUser() {
+    Auth.currentAuthenticatedUser()
+      .then(user => console.log({ user }))
+      .catch(err => console.log(err));
+    console.log(await Auth.currentUserInfo());
+  }
+
+  function handleAuthStateChange(state) {
+    if (state === 'signedIn') {
+      setIsSignedin(true);
+    } else {
+      setIsSignedin(false);
+    }
   }
 
   return (
     <div className="App">
+      <Authenticator hideDefault={true} onStateChange={handleAuthStateChange}>
+          <SignIn/>
+          <SignUp/>
+          <ConfirmSignUp/>
+          <Greetings/>
+      </Authenticator>
+    
       <h1>My Works App</h1>
+      <button onClick={checkUser}>Check User</button>
       <input
-        onChange={e => setFormData({ ...formData, 'date': e.target.value})}
-        placeholder="Date"
-        value={formData.date}
+        onChange={e => setFormData({ ...formData, 'month': e.target.value})}
+        placeholder="Month"
+        value={formData.month}
+      />
+      <input
+        onChange={e => setFormData({ ...formData, 'day': e.target.value})}
+        placeholder="Day"
+        value={formData.day}
       />
       <input
         onChange={e => setFormData({ ...formData, 'workType': e.target.value})}
         placeholder="Work type"
         value={formData.workType}
       />
-
       <button onClick={createWork}>Create Work</button>
       <div style={{marginBottom: 30}}>
         {
           works.map(work => (
-            <div key={work.date}>
+            <div key={work.day}>
               <div>
-                <span>Date: {work.date} | </span>
+                <span>Date: {work.month}-{work.day} |</span>
                 {
-                  Object.keys(work).filter(key => key !== 'date' && key !== 'updatedAt').map(key => (
+                  Object.keys(work).filter(key => key !== 'month' && key !== 'day' && key !== 'updatedAt').map(key => (
                     <span key={key}>
                         {key} - {work[key]} 
-                      <button onClick={() => deleteWork(work.date, key)}>Delete</button>
+                      <button onClick={() => deleteWork(work.month, work.day, key)}>Delete</button>
                     </span>
                   ))
                 }
@@ -64,9 +99,33 @@ function App() {
           ))
         }
       </div>
-      <AmplifySignOut />
+      
+      <Table striped bordered hover variant="dark">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Day</th>
+            <th>cooking</th>
+            <th>recycle</th>
+            <th>dishes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            works.map(work => (
+              <tr key={work.day}>
+                <td>{work.month}</td>
+                <td>{work.day}</td>
+                <td>{work.cooking}</td>
+                <td>{work.recycle}</td>
+                <td>{work.dishes}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </Table>
     </div>
   );
 }
 
-export default withAuthenticator(App);
+export default App;

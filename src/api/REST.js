@@ -19,7 +19,6 @@ export function post(apiName, path, body) {
 }
 
 export function del(apiName, path, body) {
-  console.log(body);
   var response = API.del(apiName, path, { body: body })
     .catch(err => {
       console.log(err);
