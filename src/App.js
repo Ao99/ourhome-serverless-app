@@ -2,40 +2,63 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import { Auth } from 'aws-amplify';
 import { Authenticator, SignIn, SignUp, ConfirmSignUp, Greetings } from 'aws-amplify-react';
-import { Table } from 'react-bootstrap';
-import { getAllWorks, updateOneWork, deleteOneWork } from './service/WorkService.js';
-
-const initialFormState = { month: '', day: '', workType: '' };
+import { Table, Button } from 'react-bootstrap';
+import { getSettingsByType, updateOneSetting } from './service/SettingService.js';
+import { getWorksByMonth, updateOneWork, deleteOneWork } from './service/WorkService.js';
 
 function App() {
+  let now = new Date();
+  now = new Date(now.getTime() - now.getTimezoneOffset() * 60000); // offset according to time zone
+  
   const [isSignedin, setIsSignedin] = useState(false);
+  const [month, setMonth] = useState('' + now.getFullYear() + (now.getMonth() + 1));
+  const [workTypes, setWorkTypes] = useState([]);
   const [works, setWorks] = useState([]);
-  const [formData, setFormData] = useState(initialFormState);
+  const [formData, setFormData] = useState({'workType': ''});
 
   useEffect(() => {
-    fetchWorks();
+    fetchWorkTypes();
   }, []);
-
+  
   useEffect(() => {
-    console.log(isSignedin);
-  }, [isSignedin]);
-
-  async function fetchWorks() {
-    var allWorks = await getAllWorks();
-    console.log( allWorks ? allWorks.Items : [] );
-    setWorks(allWorks ? allWorks.Items : []);
+    fetchWorks(month);
+  }, [month]);
+  
+  async function fetchWorkTypes() {
+    var allWorkTypes = (await getSettingsByType('workTypes')).Items[0].allUsers;
+    setWorkTypes(allWorkTypes ? allWorkTypes : []);
   }
 
-  async function createWork() {
-    if (!isSignedin || !formData.month || !formData.day || !formData.workType) return;
-    await updateOneWork(formData.month, formData.day, formData.workType);
-    fetchWorks();
+  async function createWorkType() {
+    if (!isSignedin) return;
+    var newWorkTypes = [ ...workTypes, formData.workType];
+    await updateOneSetting('workTypes', newWorkTypes, true);
+    fetchWorkTypes();
+  }
+  
+  async function deleteWorkType(index) {
+    if (!isSignedin) return;
+    var newWorkTypes = [ ...workTypes];
+    newWorkTypes.splice(index, 1);
+    await updateOneSetting('workTypes', newWorkTypes, true);
+    fetchWorkTypes();
+  }
+  
+  async function fetchWorks(month) {
+    var worksByMonth = (await getWorksByMonth(month)).Items;
+    setWorks(worksByMonth ? worksByMonth : []);
   }
 
-  async function deleteWork(month, day, workType) {
+  async function createWork(day, workType) {
+    if (!isSignedin || !day || !workType) return;
+    await updateOneWork(month, day, workType);
+    fetchWorks(month);
+  }
+
+  async function deleteWork(day, workType) {
     if (!isSignedin) return;
     await deleteOneWork(month, day, workType);
-    fetchWorks();
+    fetchWorks(month);
   }
   
   async function checkUser() {
@@ -61,64 +84,58 @@ function App() {
           <ConfirmSignUp/>
           <Greetings/>
       </Authenticator>
-    
-      <h1>My Works App</h1>
+
       <button onClick={checkUser}>Check User</button>
-      <input
-        onChange={e => setFormData({ ...formData, 'month': e.target.value})}
-        placeholder="Month"
-        value={formData.month}
-      />
-      <input
-        onChange={e => setFormData({ ...formData, 'day': e.target.value})}
-        placeholder="Day"
-        value={formData.day}
-      />
-      <input
-        onChange={e => setFormData({ ...formData, 'workType': e.target.value})}
-        placeholder="Work type"
-        value={formData.workType}
-      />
-      <button onClick={createWork}>Create Work</button>
-      <div style={{marginBottom: 30}}>
-        {
-          works.map(work => (
-            <div key={work.day}>
-              <div>
-                <span>Date: {work.month}-{work.day} |</span>
-                {
-                  Object.keys(work).filter(key => key !== 'month' && key !== 'day' && key !== 'updatedAt').map(key => (
-                    <span key={key}>
-                        {key} - {work[key]} 
-                      <button onClick={() => deleteWork(work.month, work.day, key)}>Delete</button>
-                    </span>
-                  ))
-                }
-              </div>
-            </div>
-          ))
-        }
+      <h1>My Works App</h1>
+      
+      <div>
+        Set month -
+        <input
+          onChange={e => setMonth(e.target.value)}
+          placeholder="Month"
+          value={month}
+        />
       </div>
       
-      <Table striped bordered hover variant="dark">
+      <div>
+        <input
+          onChange={e => setFormData({ ...formData, 'workType': e.target.value})}
+          placeholder="Work type"
+          value={formData.workType}
+        />
+        <button onClick={createWorkType}>Create work type</button>
+      </div>
+      
+      <Table responsive striped bordered hover variant="dark">
         <thead>
           <tr>
-            <th>Month</th>
-            <th>Day</th>
-            <th>cooking</th>
-            <th>recycle</th>
-            <th>dishes</th>
+            <th>Date</th>
+            {
+              workTypes.map((workType, index) => (
+                <th key={workType}>
+                  {workType}
+                  <Button variant="outline-danger" onClick={() => deleteWorkType(index)}>Delete</Button>
+                </th>
+              ))
+            }
+            <th>Updated at</th>
           </tr>
         </thead>
         <tbody>
           {
             works.map(work => (
               <tr key={work.day}>
-                <td>{work.month}</td>
-                <td>{work.day}</td>
-                <td>{work.cooking}</td>
-                <td>{work.recycle}</td>
-                <td>{work.dishes}</td>
+                <td>{month}-{work.day}</td>
+                {
+                  workTypes.map(workType => (
+                    <td key={workType}>
+                      {work[workType]}
+                      <Button variant="outline-info" onClick={() => createWork(work.day, workType)}>Create</Button>
+                      <Button variant="outline-danger" onClick={() => deleteWork(work.day, workType)}>Delete</Button>
+                    </td>
+                  ))
+                }
+                <td>{work.updatedAt}</td>
               </tr>
             ))
           }

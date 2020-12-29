@@ -3,11 +3,7 @@ import { get, post, del } from '../api/REST.js';
 const apiName = 'ourhomeApi';
 const path = '/work';
 
-export function getAllWorks() {
-    return get(apiName, `${path}/all`);
-}
-
-export function getWorksByDate(month) {
+export function getWorksByMonth(month) {
     return get(apiName, `${path}/${month}`);
 }
 
