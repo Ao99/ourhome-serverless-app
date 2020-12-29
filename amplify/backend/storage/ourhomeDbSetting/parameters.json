@@ -1,0 +1,5 @@
+{
+    "tableName": "ourhomeDbSetting",
+    "partitionKeyName": "type",
+    "partitionKeyType": "S"
+}

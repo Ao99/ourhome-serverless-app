@@ -17,6 +17,23 @@
                 ]
             },
             "policyResourceName": "/work/*"
+        },
+        {
+            "name": "/setting/{type}",
+            "lambdaFunction": "ourhomeFuncSetting",
+            "privacy": {
+                "protected": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ],
+                "unauth": [
+                    "/GET"
+                ]
+            }
         }
     ],
     "resourceName": "ourhomeApi",
@@ -24,11 +41,14 @@
     "functionArns": [
         {
             "lambdaFunction": "ourhomeFuncWork"
+        },
+        {
+            "lambdaFunction": "ourhomeFuncSetting"
         }
     ],
     "privacy": {
-        "auth": 1,
-        "unauth": 1,
+        "auth": 2,
+        "unauth": 2,
         "authRoleName": "amplify-ourhomeapp-dev-15859-authRole",
         "unAuthRoleName": "amplify-ourhomeapp-dev-15859-unauthRole"
     },
@@ -40,6 +60,15 @@
                 "Name",
                 "Arn"
             ]
+        },
+        {
+            "category": "function",
+            "resourceName": "ourhomeFuncSetting",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
         }
-    ]
+    ],
+    "uuid": "4a06504a"
 }

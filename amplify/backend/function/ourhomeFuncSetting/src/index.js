@@ -6,7 +6,7 @@ exports.handler = async (event, context) => {
     //console.log('Received event:', JSON.stringify(event, null, 2));
     AWS.config.update({ region: process.env.REGION });
 
-    let tableName = "ourhomeDbWork";
+    let tableName = "ourhomeDbSetting";
     let body;
     let statusCode = '200';
     const headers = {
@@ -19,56 +19,38 @@ exports.handler = async (event, context) => {
         if(process.env.ENV && process.env.ENV !== "NONE") {
           tableName = tableName + '-' + process.env.ENV;
         }
-        var month = parseInt(event.pathParameters.month, 10);
+        var type = event.pathParameters.type;
 
         switch (event.httpMethod) {
             case 'GET':
                 body = await dynamo.query(
                     {
                         TableName: tableName,
-                        KeyConditionExpression: '#mth = :month',
-                        ExpressionAttributeNames: { "#mth": 'month' },
-                        ExpressionAttributeValues:{ ":month":  month}
+                        KeyConditionExpression: '#type = :type',
+                        ExpressionAttributeNames: { "#type": 'type' },
+                        ExpressionAttributeValues:{ ":type":  type}
                     }
                 ).promise();
                 break;
             case 'POST':
                 var reqBody = JSON.parse(event.body);
-                var user = await getUser(event);
+                var username = reqBody.isForAllUsers ? 'allUsers' : (await getUser(event)).username;
                 var now = new Date(new Date().getTime() - (300 * 60000)).toISOString();
-                
+
                 body = await dynamo.update(
-                        {
-                            TableName: tableName,
-                            Key: {
-                                'month': month,
-                                'day': parseInt(reqBody.day, 10)
-                            },
-                            UpdateExpression: `set ${reqBody.workType} = :username, updatedAt = :timeStamp`,
-                            ExpressionAttributeValues:{
-                                ":username": user.Username,
-                                ":timeStamp": now
-                            },
-                            ReturnValues:"UPDATED_NEW"
-                        }
-                    ).promise();
-                break;
-            case 'DELETE':
-                reqBody = JSON.parse(event.body);
-                now = new Date(new Date().getTime() - (300 * 60000)).toISOString();
-                
-                body = await dynamo.update(
-                        {
-                            TableName: tableName,
-                            Key: {
-                                'month': month,
-                                'day': parseInt(reqBody.day, 10)
-                            },
-                            UpdateExpression: `remove ${reqBody.workType} set updatedAt = :timeStamp`,
-                            ExpressionAttributeValues:{ ":timeStamp": now },
-                            ReturnValues:"UPDATED_NEW"
-                        }
-                    ).promise();
+                    {
+                        TableName: tableName,
+                        Key: {
+                            'type': type,
+                        },
+                        UpdateExpression: `set ${username} = :settingValue, updatedAt = :timeStamp`,
+                        ExpressionAttributeValues:{
+                            ":settingValue": reqBody.settingValue,
+                            ":timeStamp": now
+                        },
+                        ReturnValues:"UPDATED_NEW"
+                    }
+                ).promise();
                 break;
             default:
                 throw new Error(`Unsupported method "${event.httpMethod}"`);
