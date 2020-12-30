@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Auth } from 'aws-amplify';
-import { Authenticator, SignIn, SignUp, ConfirmSignUp, Greetings } from 'aws-amplify-react';
-import { Table, Button } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
+import Header from './Header.js';
+import getRipple from './Ripple.js';
 import { getSettingsByType, updateOneSetting } from './service/SettingService.js';
 import { getWorksByMonth, updateOneWork, deleteOneWork } from './service/WorkService.js';
 
@@ -15,6 +16,8 @@ function App() {
   const [workTypes, setWorkTypes] = useState([]);
   const [works, setWorks] = useState([]);
   const [formData, setFormData] = useState({'workType': ''});
+  const RippleTh = getRipple('th');
+  const RippleTd = getRipple('td');
 
   useEffect(() => {
     fetchWorkTypes();
@@ -24,11 +27,19 @@ function App() {
     fetchWorks(month);
   }, [month]);
   
+  function handleAuthStateChange(state) {
+    if (state === 'signedIn') {
+      setIsSignedin(true);
+    } else {
+      setIsSignedin(false);
+    }
+  }
+  
   async function fetchWorkTypes() {
     var allWorkTypes = (await getSettingsByType('workTypes')).Items[0].allUsers;
     setWorkTypes(allWorkTypes ? allWorkTypes : []);
   }
-
+  
   async function createWorkType() {
     if (!isSignedin) return;
     var newWorkTypes = [ ...workTypes, formData.workType];
@@ -48,16 +59,16 @@ function App() {
     var worksByMonth = (await getWorksByMonth(month)).Items;
     setWorks(worksByMonth ? worksByMonth : []);
   }
-
-  async function createWork(day, workType) {
-    if (!isSignedin || !day || !workType) return;
-    await updateOneWork(month, day, workType);
-    fetchWorks(month);
-  }
-
-  async function deleteWork(day, workType) {
+  
+  async function handleClickWork(work, day, workType) {
     if (!isSignedin) return;
-    await deleteOneWork(month, day, workType);
+    
+    if(work[workType]) {
+      await deleteOneWork(month, day, workType);
+    } else {
+      await updateOneWork(month, day, workType);
+    }
+    
     fetchWorks(month);
   }
   
@@ -68,24 +79,11 @@ function App() {
     console.log(await Auth.currentUserInfo());
   }
 
-  function handleAuthStateChange(state) {
-    if (state === 'signedIn') {
-      setIsSignedin(true);
-    } else {
-      setIsSignedin(false);
-    }
-  }
-
   return (
     <div className="App">
-      <Authenticator hideDefault={true} onStateChange={handleAuthStateChange}>
-          <SignIn/>
-          <SignUp/>
-          <ConfirmSignUp/>
-          <Greetings/>
-      </Authenticator>
-
+      <Header onStateChange={handleAuthStateChange} />
       <button onClick={checkUser}>Check User</button>
+      
       <h1>My Works App</h1>
       
       <div>
@@ -112,10 +110,9 @@ function App() {
             <th>Date</th>
             {
               workTypes.map((workType, index) => (
-                <th key={workType}>
+                <RippleTh className="filled" key={workType} onClick={() => deleteWorkType(index)}>
                   {workType}
-                  <Button variant="outline-danger" onClick={() => deleteWorkType(index)}>Delete</Button>
-                </th>
+                </RippleTh>
               ))
             }
             <th>Updated at</th>
@@ -128,11 +125,9 @@ function App() {
                 <td>{month}-{work.day}</td>
                 {
                   workTypes.map(workType => (
-                    <td key={workType}>
+                    <RippleTd className={work[workType] ? "filled" : "empty"} key={workType} onClick={() => handleClickWork(work, work.day, workType)}>
                       {work[workType]}
-                      <Button variant="outline-info" onClick={() => createWork(work.day, workType)}>Create</Button>
-                      <Button variant="outline-danger" onClick={() => deleteWork(work.day, workType)}>Delete</Button>
-                    </td>
+                    </RippleTd>
                   ))
                 }
                 <td>{work.updatedAt}</td>
