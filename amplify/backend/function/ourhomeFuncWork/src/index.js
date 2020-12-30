@@ -44,7 +44,8 @@ exports.handler = async (event, context) => {
                                 'month': month,
                                 'day': parseInt(reqBody.day, 10)
                             },
-                            UpdateExpression: `set ${reqBody.workType} = :username, updatedAt = :timeStamp`,
+                            UpdateExpression: `set #workType = :username, updatedAt = :timeStamp`,
+                            ExpressionAttributeNames: { "#workType": reqBody.workType },
                             ExpressionAttributeValues:{
                                 ":username": user.Username,
                                 ":timeStamp": now
@@ -64,7 +65,8 @@ exports.handler = async (event, context) => {
                                 'month': month,
                                 'day': parseInt(reqBody.day, 10)
                             },
-                            UpdateExpression: `remove ${reqBody.workType} set updatedAt = :timeStamp`,
+                            UpdateExpression: `remove #workType set updatedAt = :timeStamp`,
+                            ExpressionAttributeNames: { "#workType": reqBody.workType },
                             ExpressionAttributeValues:{ ":timeStamp": now },
                             ReturnValues:"UPDATED_NEW"
                         }
