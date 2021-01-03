@@ -6,17 +6,17 @@ exports.handler = async (event, context) => {
     //console.log('Received event:', JSON.stringify(event, null, 2));
     AWS.config.update({ region: process.env.REGION });
 
-    let tableName = "ourhomeDbWork";
+    let tableName = 'ourhomeDbWork';
     let body;
     let statusCode = '200';
     const headers = {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "*"
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*'
     };
 
     try {
-        if(process.env.ENV && process.env.ENV !== "NONE") {
+        if(process.env.ENV && process.env.ENV !== 'NONE') {
           tableName = tableName + '-' + process.env.ENV;
         }
         var month = parseInt(event.pathParameters.month, 10);
@@ -27,53 +27,48 @@ exports.handler = async (event, context) => {
                     {
                         TableName: tableName,
                         KeyConditionExpression: '#mth = :month',
-                        ExpressionAttributeNames: { "#mth": 'month' },
-                        ExpressionAttributeValues:{ ":month":  month}
+                        ExpressionAttributeNames: { '#mth': 'month' },
+                        ExpressionAttributeValues:{ ':month':  month}
                     }
                 ).promise();
                 break;
             case 'POST':
                 var reqBody = JSON.parse(event.body);
-                var user = await getUser(event);
                 var now = new Date(new Date().getTime() - (300 * 60000)).toISOString();
+                var day = parseInt(reqBody.day, 10);
+                var username = (await getUser(event)).Username;
+                var userList = (await getWorkOneDay(tableName, month, day))[reqBody.workType];
+                
+                if(!userList) {
+                    userList = [username];
+                } else {
+                    var index = userList.indexOf(username);
+                    if(index > -1) {
+                        userList.splice(index, 1);
+                    } else {
+                        userList.push(username);
+                    }
+                }
                 
                 body = await dynamo.update(
                         {
                             TableName: tableName,
                             Key: {
                                 'month': month,
-                                'day': parseInt(reqBody.day, 10)
+                                'day': day
                             },
-                            UpdateExpression: `set #workType = :username, updatedAt = :timeStamp`,
-                            ExpressionAttributeNames: { "#workType": reqBody.workType },
+                            UpdateExpression: `set #workType = :userList, updatedAt = :timeStamp`,
+                            ExpressionAttributeNames: { '#workType': reqBody.workType },
                             ExpressionAttributeValues:{
-                                ":username": user.Username,
-                                ":timeStamp": now
+                                ':userList': userList,
+                                ':timeStamp': now
                             },
-                            ReturnValues:"UPDATED_NEW"
-                        }
-                    ).promise();
-                break;
-            case 'DELETE':
-                reqBody = JSON.parse(event.body);
-                now = new Date(new Date().getTime() - (300 * 60000)).toISOString();
-                
-                body = await dynamo.update(
-                        {
-                            TableName: tableName,
-                            Key: {
-                                'month': month,
-                                'day': parseInt(reqBody.day, 10)
-                            },
-                            UpdateExpression: `remove #workType set updatedAt = :timeStamp`,
-                            ExpressionAttributeNames: { "#workType": reqBody.workType },
-                            ExpressionAttributeValues:{ ":timeStamp": now },
-                            ReturnValues:"UPDATED_NEW"
+                            ReturnValues:'UPDATED_NEW'
                         }
                     ).promise();
                 break;
             default:
-                throw new Error(`Unsupported method "${event.httpMethod}"`);
+                throw new Error(`Unsupported method '${event.httpMethod}'`);
         }
     } catch (err) {
         statusCode = '400';
@@ -95,9 +90,27 @@ async function getUser(event) {
     var userSub = event.requestContext.identity.cognitoAuthenticationProvider.split(':')[2];
     var params = {
         UserPoolId: process.env.USERPOOLID,
-        Filter: `sub="${userSub}"`,
+        Filter: `sub='${userSub}'`,
         Limit: 1
     };
     var cognitoRes = await cognito.listUsers(params).promise();
     return cognitoRes.Users[0];
+}
+
+async function getWorkOneDay(tableName, month, day) {
+    var dbRes = await dynamo.query(
+        {
+            TableName: tableName,
+            KeyConditionExpression: '#mth = :month and #d = :day',
+            ExpressionAttributeNames: {
+                '#mth': 'month',
+                '#d': 'day'
+            },
+            ExpressionAttributeValues:{ 
+                ':month':  month,
+                ':day': day
+            }
+        }
+    ).promise();
+    return dbRes.Items[0];
 }
