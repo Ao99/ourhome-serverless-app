@@ -49,6 +49,7 @@ exports.handler = async (event, context) => {
                         userList.push(username);
                     }
                 }
+                userList.sort();
                 
                 body = await dynamo.update(
                         {

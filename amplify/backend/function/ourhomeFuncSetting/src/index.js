@@ -6,17 +6,17 @@ exports.handler = async (event, context) => {
     //console.log('Received event:', JSON.stringify(event, null, 2));
     AWS.config.update({ region: process.env.REGION });
 
-    let tableName = "ourhomeDbSetting";
+    let tableName = 'ourhomeDbSetting';
     let body;
     let statusCode = '200';
     const headers = {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "*"
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*'
     };
 
     try {
-        if(process.env.ENV && process.env.ENV !== "NONE") {
+        if(process.env.ENV && process.env.ENV !== 'NONE') {
           tableName = tableName + '-' + process.env.ENV;
         }
         var type = event.pathParameters.type;
@@ -27,8 +27,8 @@ exports.handler = async (event, context) => {
                     {
                         TableName: tableName,
                         KeyConditionExpression: '#type = :type',
-                        ExpressionAttributeNames: { "#type": 'type' },
-                        ExpressionAttributeValues:{ ":type":  type}
+                        ExpressionAttributeNames: { '#type': 'type' },
+                        ExpressionAttributeValues:{ ':type':  type}
                     }
                 ).promise();
                 break;
@@ -45,15 +45,15 @@ exports.handler = async (event, context) => {
                         },
                         UpdateExpression: `set ${username} = :settingValue, updatedAt = :timeStamp`,
                         ExpressionAttributeValues:{
-                            ":settingValue": reqBody.settingValue,
-                            ":timeStamp": now
+                            ':settingValue': reqBody.settingValue,
+                            ':timeStamp': now
                         },
-                        ReturnValues:"UPDATED_NEW"
+                        ReturnValues:'UPDATED_NEW'
                     }
                 ).promise();
                 break;
             default:
-                throw new Error(`Unsupported method "${event.httpMethod}"`);
+                throw new Error(`Unsupported method '${event.httpMethod}'`);
         }
     } catch (err) {
         statusCode = '400';
@@ -75,7 +75,7 @@ async function getUser(event) {
     var userSub = event.requestContext.identity.cognitoAuthenticationProvider.split(':')[2];
     var params = {
         UserPoolId: process.env.USERPOOLID,
-        Filter: `sub="${userSub}"`,
+        Filter: `sub='${userSub}'`,
         Limit: 1
     };
     var cognitoRes = await cognito.listUsers(params).promise();
