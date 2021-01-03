@@ -1,4 +1,4 @@
-import { get, post } from '../api/REST.js';
+import { get, post } from '../utils/REST.js';
 
 const apiName = 'ourhomeApi';
 const path = '/setting';
