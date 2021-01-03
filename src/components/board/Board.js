@@ -30,8 +30,9 @@ function Board(props) {
   }, [yearMonth, day, numDays]);
   
   function scrollTo(day) {
+    if(day < 2) return;
     var tableBody = tBodyRef.current;
-    tableBody.childNodes[day].scrollIntoView({behavior: 'smooth', block: 'start'});
+    tableBody.childNodes[day-2].scrollIntoView({behavior: 'smooth', block: 'start'});
   }
   
   async function fetchWorkTypes() {
