@@ -38,6 +38,9 @@ function Board(props) {
     tableBody.childNodes[day-3].scrollIntoView({behavior: 'smooth', block: 'start'});
   }
   
+  /*
+   * start of workType
+   */
   async function fetchWorkTypes() {
     try {
       var allWorkTypes = (await getSettingsByType('workTypes')).Items[0].allUsers;
@@ -47,7 +50,7 @@ function Board(props) {
     }
   }
   
-  async function createWorkType() {
+  async function addWorkType() {
     if (!props.isSignedin) return;
     workTypes.push(formData.workType);
     await updateOneSetting('workTypes', workTypes, true);
@@ -63,42 +66,49 @@ function Board(props) {
     fetchWorkTypes();
   }
   
-  async function fetchWorks(yearMonth, numDays) {
-    try {
-      var worksByYearMonth = (await getWorksByMonth(yearMonth)).Items;
-
-      var modifiedWorks = [];
-      for(var i=0, j=0; i<numDays; i++){
-        if(j < worksByYearMonth.length && worksByYearMonth[j].day === i + 1) {
-          modifiedWorks.push(worksByYearMonth[j]);
-          j++;
-        } else {
-          modifiedWorks.push({ day: i+1 });
-        }
-      }
-      setWorks(modifiedWorks);
-    } catch(err) {
-      setWorks([]);
-    }
-  }
+  const handleShowAdd = () => setShowAdd(true);
   
   const handleCloseAdd = () => setShowAdd(false);
-  
-  const handleShowAdd = () => setShowAdd(true);
-    
-  const handleCloseDel = () => setShowDel(false);
   
   const handleShowDel = (index) => {
     setWorkTypeIdx(index);
     setShowDel(true);
   };
   
-  async function handleClickWork(work, day, workType) {
+  const handleCloseDel = () => setShowDel(false);
+  // end of workType
+   
+  /*
+   * start of work
+   */
+  async function fetchWorks(yearMonth, numDays) {
+    try {
+      var works = (await getWorksByMonth(yearMonth)).Items;
+      
+      // DB may only contains records for some days, e.g. day 1, 3, 7, 8, 11, ...
+      // fill the missing days with empty work
+      var worksFullMonth = [];
+      for(var i=0, j=0; i<numDays; i++){
+        if(j < works.length && works[j].day === i + 1) {
+          worksFullMonth.push(works[j]);
+          j++;
+        } else {
+          worksFullMonth.push({ day: i+1 });
+        }
+      }
+      setWorks(worksFullMonth);
+    } catch(err) {
+      setWorks([]);
+    }
+  }
+  
+  async function updateWork(day, workType) {
     if (!props.isSignedin) return;
     await updateOneWork(yearMonth, day, workType);
     fetchWorks(yearMonth, numDays);
   }
-
+  // end of work
+  
   return (
     <div>
       <h1>My Works App</h1>
@@ -128,7 +138,7 @@ function Board(props) {
           <Button variant="secondary" onClick={handleCloseAdd}>
             Close
           </Button>
-          <Button variant="primary" onClick={createWorkType}>
+          <Button variant="primary" onClick={addWorkType}>
             Confirm
           </Button>
         </Modal.Footer>
@@ -175,7 +185,7 @@ function Board(props) {
                 <td>{yearMonth}-{work.day}</td>
                 {
                   workTypes.map(workType => (
-                    <Ripple customTag="td" className={work[workType] ? "filled" : "empty"} key={workType} onClick={() => handleClickWork(work, work.day, workType)}>
+                    <Ripple customTag="td" className={work[workType] ? "filled" : "empty"} key={workType} onClick={() => updateWork(work.day, workType)}>
                       {work[workType] ? work[workType].map(username => username + ' ') : ''}
                     </Ripple>
                   ))
