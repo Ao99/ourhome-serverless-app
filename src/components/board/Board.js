@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Modal, Table } from 'react-bootstrap';
 import './Board.css';
 import Ripple from '../ripple/Ripple.js';
 import { getSettingsByType, updateOneSetting } from '../../services/SettingService.js';
@@ -18,6 +18,9 @@ function Board(props) {
   const [yearMonth, setYearMonth] = useState('' + year + (month < 10 ? '0' : '') + month);
   const [workTypes, setWorkTypes] = useState([]);
   const [works, setWorks] = useState(array31Days);
+  const [showAdd, setShowAdd] = useState(false);
+  const [showDel, setShowDel] = useState(false);
+  const [workTypeIdx, setWorkTypeIdx] = useState(-1);
   const [formData, setFormData] = useState({'workType': ''});
 
   useEffect(() => {
@@ -48,12 +51,14 @@ function Board(props) {
     if (!props.isSignedin) return;
     workTypes.push(formData.workType);
     await updateOneSetting('workTypes', workTypes, true);
-    fetchWorkTypes();
+    setShowAdd(false);
+    setFormData({ ...formData, 'workType': '' });
+    fetchWorkTypes({});
   }
   
-  async function deleteWorkType(index) {
+  async function deleteWorkType() {
     if (!props.isSignedin) return;
-    workTypes.splice(index, 1);
+    workTypes.splice(workTypeIdx, 1);
     await updateOneSetting('workTypes', workTypes, true);
     fetchWorkTypes();
   }
@@ -77,6 +82,17 @@ function Board(props) {
     }
   }
   
+  const handleCloseAdd = () => setShowAdd(false);
+  
+  const handleShowAdd = () => setShowAdd(true);
+    
+  const handleCloseDel = () => setShowDel(false);
+  
+  const handleShowDel = (index) => {
+    setWorkTypeIdx(index);
+    setShowDel(true);
+  };
+  
   async function handleClickWork(work, day, workType) {
     if (!props.isSignedin) return;
     await updateOneWork(yearMonth, day, workType);
@@ -96,14 +112,44 @@ function Board(props) {
         />
       </div>
       
-      <div>
-        <input
-          onChange={e => setFormData({ ...formData, 'workType': e.target.value})}
-          placeholder="Work type"
-          value={formData.workType}
-        />
-        <Button variant="outline-success" onClick={createWorkType}>Create work type</Button>
-      </div>
+      <Modal show={showAdd} onHide={handleCloseAdd}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add a work type</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Name of the new work type:</p>
+          <input
+            onChange={e => setFormData({ ...formData, 'workType': e.target.value })}
+            placeholder="Work type"
+            value={formData.workType}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseAdd}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={createWorkType}>
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      
+      <Modal show={showDel} onHide={handleCloseDel}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete a work type</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Do you want to delete the work type "{workTypes[workTypeIdx]}"?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseDel}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={deleteWorkType}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
       
       <Table responsive striped bordered hover variant="dark">
         <thead className="header">
@@ -111,11 +157,14 @@ function Board(props) {
             <th>Date</th>
             {
               workTypes.map((workType, index) => (
-                <Ripple customTag="th" className="filled" key={workType} onClick={() => deleteWorkType(index)}>
+                <Ripple customTag="th" className="filled" key={workType} onClick={() => handleShowDel(index)}>
                   {workType}
                 </Ripple>
               ))
             }
+            <th>
+              <Button variant="outline-success" onClick={handleShowAdd}>+</Button>
+            </th>
             <th>Updated at</th>
           </tr>
         </thead>
@@ -131,6 +180,7 @@ function Board(props) {
                     </Ripple>
                   ))
                 }
+                <td></td>
                 <td>{work.updatedAt}</td>
               </tr>
             ))
