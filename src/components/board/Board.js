@@ -1,28 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
-import { Button, Modal, Table } from 'react-bootstrap';
-import './Board.css';
+import { Button, Table } from 'react-bootstrap';
 import Ripple from '../ripple/Ripple.js';
-import { getSettingsByType, updateOneSetting } from '../../services/SettingService.js';
+import { getSettingsByType } from '../../services/SettingService.js';
 import { getWorksByMonth, updateOneWork } from '../../services/WorkService.js';
+import { AddWorkType, DelWorkType } from './UpdateWorkTypes.js';
+import './Board.css';
 
 function Board(props) {
+  const yearMonth = '' + props.year + (props.month < 10 ? '0' : '') + props.month;
   const numDays = new Date(props.year, props.month, 0).getDate();
   const array31Days = Array.from({length: 31}, (_, i) => {return {day: i + 1}});
 
   const tBodyRef = useRef(null);
 
-  const [yearMonth, setYearMonth] = useState('' + props.year + (props.month < 10 ? '0' : '') + props.month);
   const [workTypes, setWorkTypes] = useState([]);
   const [works, setWorks] = useState(array31Days);
   const [showAdd, setShowAdd] = useState(false);
   const [showDel, setShowDel] = useState(false);
   const [workTypeIdx, setWorkTypeIdx] = useState(-1);
-  const [formData, setFormData] = useState({'workType': ''});
-  
+
   useEffect(() => {
-    setYearMonth('' + props.year + (props.month < 10 ? '0' : '') + props.month);
     scrollTo(props.day);
-    console.log(JSON.stringify(props));
   }, [props]);
   
   useEffect(() => {
@@ -33,10 +31,9 @@ function Board(props) {
     fetchWorks(yearMonth, numDays);
   }, [yearMonth, numDays]);
   
-  function scrollTo(day) {
+  function scrollTo(day, numDays) {
     if(day > numDays-2) day = numDays-2;
     var tableBody = tBodyRef.current;
-    console.log(day);
     tableBody.childNodes[day+1].scrollIntoView({behavior: 'smooth', block: 'center'});
   }
   
@@ -52,33 +49,14 @@ function Board(props) {
     }
   }
   
-  async function addWorkType() {
-    if (!props.isSignedin) return;
-    workTypes.push(formData.workType);
-    await updateOneSetting('workTypes', workTypes, true);
-    setShowAdd(false);
-    setFormData({ ...formData, 'workType': '' });
-    fetchWorkTypes({});
+  function handleShowAdd() {
+    setShowAdd(true);
   }
   
-  async function deleteWorkType() {
-    if (!props.isSignedin) return;
-    workTypes.splice(workTypeIdx, 1);
-    await updateOneSetting('workTypes', workTypes, true);
-    setShowDel(false);
-    fetchWorkTypes();
-  }
-  
-  const handleShowAdd = () => setShowAdd(true);
-  
-  const handleCloseAdd = () => setShowAdd(false);
-  
-  const handleShowDel = (index) => {
+  function handleShowDel(index) {
     setWorkTypeIdx(index);
     setShowDel(true);
-  };
-  
-  const handleCloseDel = () => setShowDel(false);
+  }
   // end of workType
    
   /*
@@ -111,47 +89,27 @@ function Board(props) {
     fetchWorks(yearMonth, numDays);
   }
   // end of work
-  
+
   return (
     <div>
-      <Modal show={showAdd} onHide={handleCloseAdd}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add a work type</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Name of the new work type:</p>
-          <input
-            onChange={e => setFormData({ ...formData, 'workType': e.target.value })}
-            placeholder="Work type"
-            value={formData.workType}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseAdd}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={addWorkType}>
-            Confirm
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <AddWorkType
+        isSignedin={props.isSignedin}
+        showAdd={showAdd}
+        setShowAdd={setShowAdd}
+        workTypes={workTypes}
+        setWorkType={setWorkTypes}
+        fetchWorkTypes={fetchWorkTypes}
+      />
       
-      <Modal show={showDel} onHide={handleCloseDel}>
-        <Modal.Header closeButton>
-          <Modal.Title>Delete a work type</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Do you want to delete the work type "{workTypes[workTypeIdx]}"?</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDel}>
-            Close
-          </Button>
-          <Button variant="danger" onClick={deleteWorkType}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <DelWorkType
+        isSignedin={props.isSignedin}
+        showDel={showDel}
+        setShowDel={setShowDel}
+        workTypes={workTypes}
+        setWorkType={setWorkTypes}
+        workTypeIdx={workTypeIdx}
+        fetchWorkTypes={fetchWorkTypes}
+      />
       
       <Table responsive striped bordered hover variant="dark">
         <thead>
@@ -176,7 +134,7 @@ function Board(props) {
                 <td>{props.year}-{props.month}-{work.day}</td>
                 {
                   workTypes.map(workType => (
-                    <Ripple customTag="td" className={work[workType] ? "filled" : "empty"} key={workType} onClick={() => updateWork(work.day, workType)}>
+                    <Ripple customTag="td" className={work[workType] && work[workType].length>0 ? "filled" : "empty"} key={workType} onClick={() => updateWork(work.day, workType)}>
                       {work[workType] ? work[workType].map(username => username + ' ') : ''}
                     </Ripple>
                   ))
