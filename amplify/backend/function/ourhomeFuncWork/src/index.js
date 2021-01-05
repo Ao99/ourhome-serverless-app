@@ -113,5 +113,5 @@ async function getWorkOneDay(tableName, month, day) {
             }
         }
     ).promise();
-    return dbRes.Items[0];
+    return dbRes.Items[0] ? dbRes.Items[0] : {};
 }
