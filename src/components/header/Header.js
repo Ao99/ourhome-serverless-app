@@ -2,17 +2,26 @@ import { Auth } from 'aws-amplify';
 import { Authenticator, SignIn, SignUp, ConfirmSignUp, Greetings } from 'aws-amplify-react';
 import { Button } from 'react-bootstrap';
 
-async function checkUser() {
-  Auth.currentAuthenticatedUser()
-    .then(user => console.log({ user }))
-    .catch(err => console.log(err));
-  console.log(await Auth.currentUserInfo());
-}
 
 function Header(props) {
+  async function checkUser() {
+    Auth.currentAuthenticatedUser()
+      .then(user => console.log({ user }))
+      .catch(err => console.log(err));
+    console.log(await Auth.currentUserInfo());
+  }
+  
+  function handleAuthStateChange(state) {
+    if (state === 'signedIn') {
+      props.setIsSignedin(true);
+    } else {
+      props.setIsSignedin(false);
+    }
+  }
+
   return (
     <div>
-      <Authenticator hideDefault={true} onStateChange={props.onStateChange}>
+      <Authenticator hideDefault={true} onStateChange={handleAuthStateChange} >
           <SignIn/>
           <SignUp/>
           <ConfirmSignUp/>

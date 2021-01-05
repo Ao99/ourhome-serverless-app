@@ -6,36 +6,38 @@ import { getSettingsByType, updateOneSetting } from '../../services/SettingServi
 import { getWorksByMonth, updateOneWork } from '../../services/WorkService.js';
 
 function Board(props) {
-  let now = new Date();
-  now = new Date(now.getTime() - now.getTimezoneOffset() * 60000); // offset according to time zone
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  const day = now.getDate();
-  const numDays = new Date(year, month, 0).getDate();
-  const tBodyRef = useRef(null);
+  const numDays = new Date(props.year, props.month, 0).getDate();
   const array31Days = Array.from({length: 31}, (_, i) => {return {day: i + 1}});
 
-  const [yearMonth, setYearMonth] = useState('' + year + (month < 10 ? '0' : '') + month);
+  const tBodyRef = useRef(null);
+
+  const [yearMonth, setYearMonth] = useState('' + props.year + (props.month < 10 ? '0' : '') + props.month);
   const [workTypes, setWorkTypes] = useState([]);
   const [works, setWorks] = useState(array31Days);
   const [showAdd, setShowAdd] = useState(false);
   const [showDel, setShowDel] = useState(false);
   const [workTypeIdx, setWorkTypeIdx] = useState(-1);
   const [formData, setFormData] = useState({'workType': ''});
-
+  
+  useEffect(() => {
+    setYearMonth('' + props.year + (props.month < 10 ? '0' : '') + props.month);
+    scrollTo(props.day);
+    console.log(JSON.stringify(props));
+  }, [props]);
+  
   useEffect(() => {
     fetchWorkTypes();
   }, []);
   
   useEffect(() => {
     fetchWorks(yearMonth, numDays);
-    scrollTo(day);
-  }, [yearMonth, day, numDays]);
+  }, [yearMonth, numDays]);
   
   function scrollTo(day) {
-    if(day < 3) return;
+    if(day > numDays-2) day = numDays-2;
     var tableBody = tBodyRef.current;
-    tableBody.childNodes[day-3].scrollIntoView({behavior: 'smooth', block: 'start'});
+    console.log(day);
+    tableBody.childNodes[day+1].scrollIntoView({behavior: 'smooth', block: 'center'});
   }
   
   /*
@@ -63,6 +65,7 @@ function Board(props) {
     if (!props.isSignedin) return;
     workTypes.splice(workTypeIdx, 1);
     await updateOneSetting('workTypes', workTypes, true);
+    setShowDel(false);
     fetchWorkTypes();
   }
   
@@ -111,17 +114,6 @@ function Board(props) {
   
   return (
     <div>
-      <h1>My Works App</h1>
-      
-      <div>
-        Set year & month -
-        <input
-          onChange={e => setYearMonth(e.target.value)}
-          placeholder="year & month"
-          value={yearMonth}
-        />
-      </div>
-      
       <Modal show={showAdd} onHide={handleCloseAdd}>
         <Modal.Header closeButton>
           <Modal.Title>Add a work type</Modal.Title>
@@ -162,7 +154,7 @@ function Board(props) {
       </Modal>
       
       <Table responsive striped bordered hover variant="dark">
-        <thead className="header">
+        <thead>
           <tr>
             <th>Date</th>
             {
@@ -175,14 +167,13 @@ function Board(props) {
             <th>
               <Button variant="outline-success" onClick={handleShowAdd}>+</Button>
             </th>
-            <th>Updated at</th>
           </tr>
         </thead>
         <tbody id="tbody" ref={tBodyRef}>
           {
             works.map(work => (
               <tr key={work.day} >
-                <td>{yearMonth}-{work.day}</td>
+                <td>{props.year}-{props.month}-{work.day}</td>
                 {
                   workTypes.map(workType => (
                     <Ripple customTag="td" className={work[workType] ? "filled" : "empty"} key={workType} onClick={() => updateWork(work.day, workType)}>
@@ -191,7 +182,6 @@ function Board(props) {
                   ))
                 }
                 <td></td>
-                <td>{work.updatedAt}</td>
               </tr>
             ))
           }
