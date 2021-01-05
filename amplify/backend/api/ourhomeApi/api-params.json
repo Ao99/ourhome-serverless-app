@@ -34,6 +34,23 @@
                     "/GET"
                 ]
             }
+        },
+        {
+            "name": "/env",
+            "lambdaFunction": "ourhomeFuncEnv",
+            "privacy": {
+                "protected": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ],
+                "unauth": [
+                    "/GET"
+                ]
+            }
         }
     ],
     "resourceName": "ourhomeApi",
@@ -44,11 +61,14 @@
         },
         {
             "lambdaFunction": "ourhomeFuncSetting"
+        },
+        {
+            "lambdaFunction": "ourhomeFuncEnv"
         }
     ],
     "privacy": {
-        "auth": 2,
-        "unauth": 2,
+        "auth": 3,
+        "unauth": 3,
         "authRoleName": "amplify-ourhomeapp-dev-15859-authRole",
         "unAuthRoleName": "amplify-ourhomeapp-dev-15859-unauthRole"
     },
@@ -68,7 +88,15 @@
                 "Name",
                 "Arn"
             ]
+        },
+        {
+            "category": "function",
+            "resourceName": "ourhomeFuncEnv",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
         }
     ],
-    "uuid": "4a06504a"
+    "uuid": "93f4dbe7"
 }
