@@ -50,10 +50,12 @@ function Board(props) {
   }
   
   function handleShowAdd() {
+    if (!props.isSignedin) return;
     setShowAdd(true);
   }
   
   function handleShowDel(index) {
+    if (!props.isSignedin) return;
     setWorkTypeIdx(index);
     setShowDel(true);
   }
@@ -93,7 +95,6 @@ function Board(props) {
   return (
     <div>
       <AddWorkType
-        isSignedin={props.isSignedin}
         showAdd={showAdd}
         setShowAdd={setShowAdd}
         workTypes={workTypes}
@@ -102,7 +103,6 @@ function Board(props) {
       />
       
       <DelWorkType
-        isSignedin={props.isSignedin}
         showDel={showDel}
         setShowDel={setShowDel}
         workTypes={workTypes}

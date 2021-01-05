@@ -5,7 +5,6 @@ import { updateOneSetting } from '../../services/SettingService.js';
 export function AddWorkType(props) {
   const [newWorkType, setNewWorkType] = useState('');
   async function addWorkType() {
-    if (!props.isSignedin) return;
     props.workTypes.push(newWorkType);
     await updateOneSetting('workTypes', props.workTypes, true);
     props.setShowAdd(false);
@@ -40,7 +39,6 @@ export function AddWorkType(props) {
 
 export function DelWorkType(props) {
   async function deleteWorkType() {
-    if (!props.isSignedin) return;
     props.workTypes.splice(props.workTypeIdx, 1);
     await updateOneSetting('workTypes', props.workTypes, true);
     props.setShowDel(false);
