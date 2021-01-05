@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Picker from 'react-month-picker';
-import 'react-month-picker/css/month-picker.css';
+import { Button } from 'react-bootstrap';
 import './MonthPicker.css';
 
 function MonthPicker(props) {
@@ -18,17 +18,9 @@ function MonthPicker(props) {
     setMValue({year: parseInt(props.year, 10), month: parseInt(props.month, 10)});
   }, [props]);
   
-  function MonthBox(props) {
-    return (
-      <div className="box" onClick={e => props.onClick && props.onClick(e)}>
-          <label>{props.value}</label>
-      </div>
-    );
-  }
-
   function makeText(m) {
     if (m && m.year && m.month) return (m.year + '-' + pickerLang.months[m.month-1]);
-    return '?';
+    return 'N/A';
   }
   
   function handleClickMonthBox(e) {
@@ -41,9 +33,6 @@ function MonthPicker(props) {
       props.setDay(1);
       pickAMonth.current.dismiss();
   }
-  
-  function handleAMonthDissmis(value) {
-  }
 
   return (
     <div className="list-area" >
@@ -54,9 +43,10 @@ function MonthPicker(props) {
           value={mValue}
           lang={pickerLang.months}
           onChange={handleAMonthChange}
-          onDismiss={handleAMonthDissmis}
         >
-          <MonthBox value={makeText(mValue)} onClick={handleClickMonthBox} />
+          <Button variant="secondary" size="lg" block onClick={handleClickMonthBox}>
+            {makeText(mValue)}
+          </Button>
         </Picker>
       </div>
     </div>
