@@ -1,6 +1,6 @@
 {
   "auth": {
-    "ourhomeappb4a0dc00": {
+    "ourhomeappa7d331bb": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -11,10 +11,14 @@
     "ourhomeDbWork": {
       "service": "DynamoDB",
       "providerPlugin": "awscloudformation"
+    },
+    "ourhomeDbSetting": {
+      "service": "DynamoDB",
+      "providerPlugin": "awscloudformation"
     }
   },
   "function": {
-    "ourhomeFunctionWork": {
+    "ourhomeFuncWork": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
@@ -32,6 +36,31 @@
           }
         }
       ]
+    },
+    "ourhomeFuncSetting": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "ourhomeDbSetting",
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "attributeEnvMap": {
+            "Name": "TABLE_NAME",
+            "Arn": "TABLE_ARN"
+          }
+        }
+      ]
+    },
+    "ourhomeFuncEnv": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": []
     }
   },
   "api": {
@@ -41,7 +70,23 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "ourhomeFunctionWork",
+          "resourceName": "ourhomeFuncWork",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "ourhomeFuncSetting",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "ourhomeFuncEnv",
           "attributes": [
             "Name",
             "Arn"

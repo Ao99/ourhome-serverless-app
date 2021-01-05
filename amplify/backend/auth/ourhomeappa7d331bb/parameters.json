@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "ourhomeappb4a0dc00_identitypool_b4a0dc00",
+    "identityPoolName": "ourhomeappa7d331bb_identitypool_a7d331bb",
     "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "ourhomb4a0dc00",
-    "userPoolName": "ourhomeappb4a0dc00_userpool_b4a0dc00",
+    "resourceNameTruncated": "ourhoma7d331bb",
+    "userPoolName": "ourhomeappa7d331bb_userpool_a7d331bb",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "ourhomb4a0dc00_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "ourhoma7d331bb_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "b4a0dc00",
-    "resourceName": "ourhomeappb4a0dc00",
+    "sharedId": "a7d331bb",
+    "resourceName": "ourhomeappa7d331bb",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [

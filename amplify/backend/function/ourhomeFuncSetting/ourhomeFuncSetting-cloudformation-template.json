@@ -10,13 +10,13 @@
     "env": {
       "Type": "String"
     },
-    "storageourhomeDbWorkName": {
+    "storageourhomeDbSettingName": {
       "Type": "String",
-      "Default": "storageourhomeDbWorkName"
+      "Default": "storageourhomeDbSettingName"
     },
-    "storageourhomeDbWorkArn": {
+    "storageourhomeDbSettingArn": {
       "Type": "String",
-      "Default": "storageourhomeDbWorkArn"
+      "Default": "storageourhomeDbSettingArn"
     }
   },
   "Conditions": {
@@ -41,12 +41,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "ourhomeFunctionWork",
+            "ourhomeFuncSetting",
             {
               "Fn::Join": [
                 "",
                 [
-                  "ourhomeFunctionWork",
+                  "ourhomeFuncSetting",
                   "-",
                   {
                     "Ref": "env"
@@ -76,8 +76,8 @@
         "Layers": [],
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "amplify-ourhomeapp-dev-212617-deployment",
-          "S3Key": "amplify-builds/ourhomeFunctionWork-7961356e4b336a6b5751-build.zip"
+          "S3Bucket": "amplify-ourhomeapp-dev-15859-deployment",
+          "S3Key": "amplify-builds/ourhomeFuncSetting-4d654c57315345384259-build.zip"
         }
       }
     },
@@ -87,12 +87,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "ourhomeappLambdaRolefb7c2dd4",
+            "ourhomeappLambdaRole0cab5e47",
             {
               "Fn::Join": [
                 "",
                 [
-                  "ourhomeappLambdaRolefb7c2dd4",
+                  "ourhomeappLambdaRole0cab5e47",
                   "-",
                   {
                     "Ref": "env"
@@ -172,14 +172,14 @@
               ],
               "Resource": [
                 {
-                  "Ref": "storageourhomeDbWorkArn"
+                  "Ref": "storageourhomeDbSettingArn"
                 },
                 {
                   "Fn::Join": [
                     "/",
                     [
                       {
-                        "Ref": "storageourhomeDbWorkArn"
+                        "Ref": "storageourhomeDbSettingArn"
                       },
                       "index/*"
                     ]

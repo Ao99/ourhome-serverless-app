@@ -1,8 +1,8 @@
 {
     "paths": [
         {
-            "name": "/work/{date}",
-            "lambdaFunction": "ourhomeFunctionWork",
+            "name": "/work/{month}",
+            "lambdaFunction": "ourhomeFuncWork",
             "privacy": {
                 "protected": true,
                 "auth": [
@@ -17,29 +17,86 @@
                 ]
             },
             "policyResourceName": "/work/*"
+        },
+        {
+            "name": "/setting/{type}",
+            "lambdaFunction": "ourhomeFuncSetting",
+            "privacy": {
+                "protected": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ],
+                "unauth": [
+                    "/GET"
+                ]
+            }
+        },
+        {
+            "name": "/env",
+            "lambdaFunction": "ourhomeFuncEnv",
+            "privacy": {
+                "protected": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ],
+                "unauth": [
+                    "/GET"
+                ]
+            }
         }
     ],
     "resourceName": "ourhomeApi",
     "apiName": "ourhomeApi",
     "functionArns": [
         {
-            "lambdaFunction": "ourhomeFunctionWork"
+            "lambdaFunction": "ourhomeFuncWork"
+        },
+        {
+            "lambdaFunction": "ourhomeFuncSetting"
+        },
+        {
+            "lambdaFunction": "ourhomeFuncEnv"
         }
     ],
     "privacy": {
-        "auth": 1,
-        "unauth": 1,
-        "authRoleName": "amplify-ourhomeapp-dev-212617-authRole",
-        "unAuthRoleName": "amplify-ourhomeapp-dev-212617-unauthRole"
+        "auth": 3,
+        "unauth": 3,
+        "authRoleName": "amplify-ourhomeapp-dev-15859-authRole",
+        "unAuthRoleName": "amplify-ourhomeapp-dev-15859-unauthRole"
     },
     "dependsOn": [
         {
             "category": "function",
-            "resourceName": "ourhomeFunctionWork",
+            "resourceName": "ourhomeFuncWork",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "ourhomeFuncSetting",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "ourhomeFuncEnv",
             "attributes": [
                 "Name",
                 "Arn"
             ]
         }
-    ]
+    ],
+    "uuid": "93f4dbe7"
 }

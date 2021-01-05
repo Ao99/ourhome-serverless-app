@@ -1,0 +1,23 @@
+.table-responsive{
+  height:500px;  
+  overflow:scroll;
+}
+ thead tr:nth-child(1) th{
+    background: #343a40;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+/*filled or empty*/
+.filled:hover {
+    border-color: #EC7063;
+    color: #EC7063;
+    cursor: pointer;
+}
+
+.empty:hover {
+    border-color: #45B39D;
+    color: #45B39D;
+    cursor: pointer;
+}
