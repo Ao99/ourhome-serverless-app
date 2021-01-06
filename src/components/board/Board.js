@@ -131,7 +131,7 @@ function Board(props) {
           {
             works.map(work => (
               <tr key={work.day} >
-                <td>{props.year}-{props.month}-{work.day}</td>
+                <td>{props.month}-{work.day}</td>
                 {
                   workTypes.map(workType => (
                     <Ripple customTag="td" className={work[workType] && work[workType].length>0 ? "filled" : "empty"} key={workType} onClick={() => updateWork(work.day, workType)}>

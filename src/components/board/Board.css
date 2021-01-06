@@ -1,12 +1,26 @@
 .table-responsive{
   height:600px;  
-  overflow:scroll;
+  /*overflow:scroll;*/
 }
- thead tr:nth-child(1) th{
+  thead tr:nth-child(1) th{
     background: #343a40;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 3;
+  }
+  thead tr:nth-child(1) th:first-child
+  {
+    background: #343a40;
+    position:sticky;
+    left: 0;
+    z-index: 4;
+  }
+  td:first-child
+  {
+    background: #343a40;
+    position:sticky;
+    left: 0;
+    z-index: 3;
   }
   
 /*filled or empty*/
