@@ -48,6 +48,7 @@ function Header(props) {
           <ConfirmSignUp/>
           <Greetings/>
       </Authenticator>
+      <h5>Ourhome is a web app for sharing & recording household works.</h5>
       {
       // <Button variant="outline-info" onClick={checkUser}>Check User</Button>
       }
