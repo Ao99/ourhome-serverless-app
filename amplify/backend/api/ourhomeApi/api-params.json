@@ -1,8 +1,26 @@
 {
     "paths": [
         {
-            "name": "/work/{date}",
-            "lambdaFunction": "ourhomeFunctionWork",
+            "name": "/work/{month}",
+            "lambdaFunction": "ourhomeFuncWork",
+            "privacy": {
+                "protected": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ],
+                "unauth": [
+                    "/GET"
+                ]
+            },
+            "policyResourceName": "/work/*"
+        },
+        {
+            "name": "/setting/{type}",
+            "lambdaFunction": "ourhomeFuncSetting",
             "privacy": {
                 "protected": true,
                 "auth": [
@@ -18,8 +36,8 @@
             }
         },
         {
-            "name": "/user",
-            "lambdaFunction": "ourhomeFunctionUser",
+            "name": "/env",
+            "lambdaFunction": "ourhomeFuncEnv",
             "privacy": {
                 "protected": true,
                 "auth": [
@@ -39,22 +57,25 @@
     "apiName": "ourhomeApi",
     "functionArns": [
         {
-            "lambdaFunction": "ourhomeFunctionWork"
+            "lambdaFunction": "ourhomeFuncWork"
         },
         {
-            "lambdaFunction": "ourhomeFunctionUser"
+            "lambdaFunction": "ourhomeFuncSetting"
+        },
+        {
+            "lambdaFunction": "ourhomeFuncEnv"
         }
     ],
     "privacy": {
-        "auth": 2,
-        "unauth": 2,
-        "authRoleName": "amplify-ourhomeapp-dev-155617-authRole",
-        "unAuthRoleName": "amplify-ourhomeapp-dev-155617-unauthRole"
+        "auth": 3,
+        "unauth": 3,
+        "authRoleName": "amplify-ourhomeapp-dev-15859-authRole",
+        "unAuthRoleName": "amplify-ourhomeapp-dev-15859-unauthRole"
     },
     "dependsOn": [
         {
             "category": "function",
-            "resourceName": "ourhomeFunctionWork",
+            "resourceName": "ourhomeFuncWork",
             "attributes": [
                 "Name",
                 "Arn"
@@ -62,12 +83,20 @@
         },
         {
             "category": "function",
-            "resourceName": "ourhomeFunctionUser",
+            "resourceName": "ourhomeFuncSetting",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "ourhomeFuncEnv",
             "attributes": [
                 "Name",
                 "Arn"
             ]
         }
     ],
-    "uuid": "690fc9a9"
+    "uuid": "93f4dbe7"
 }
