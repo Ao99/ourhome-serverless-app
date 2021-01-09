@@ -19,7 +19,10 @@ function App() {
   
   return (
     <div className="App">
-      <Header setIsSignedin={setIsSignedin} />
+      <Header
+        isSignedin={isSignedin}
+        setIsSignedin={setIsSignedin}
+      />
       <MonthPicker
         year={year}
         setYear={setYear}
