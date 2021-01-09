@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Header from '../header/Header.js';
 import MonthPicker from '../month/MonthPicker.js';
 import Board from '../board/Board.js';
+import Footer from '../footer/Footer.js';
 import './App.css';
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         month={month}
         day={day}
       />
+      <Footer/>
     </div>
   );
 }
