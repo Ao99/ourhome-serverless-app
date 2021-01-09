@@ -1,6 +1,6 @@
 {
   "name": "ourhome-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^0.2.33",
@@ -12,6 +12,7 @@
     "bootstrap": "^4.5.3",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
+    "react-bootstrap-icons": "^1.2.3",
     "react-dom": "^17.0.1",
     "react-month-picker": "^2.2.0",
     "react-scripts": "4.0.1",
