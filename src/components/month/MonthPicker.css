@@ -259,68 +259,66 @@ li,ul{list-style-type: none;}
   .month-picker .tab.btn.next:before {
     content: ""; }
 
-.list-area {
-  margin-top: 1rem; }
-  @media screen and (min-width: 768px) {
-    .list-area {
-      width: 500px;
-      margin-left: auto;
-      margin-right: auto; } }
-  @media screen and (max-width: 767px) {
-    .list-area > ul {
-      border-bottom: 1px solid #e8e8e8; }
-      .list-area > ul > li {
-        position: relative;
-        background-color: #fff;
-        border-top: 1px solid #e8e8e8;
-        padding: 0 1.6rem; }
-        .list-area > ul > li:after {
-          content: ' ';
-          clear: both;
-          display: table; }
-        .list-area > ul > li > label {
-          float: left;
+@media screen and (min-width: 768px) {
+  .list-area {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto; } }
+@media screen and (max-width: 767px) {
+  .list-area > ul {
+    border-bottom: 1px solid #e8e8e8; }
+    .list-area > ul > li {
+      position: relative;
+      background-color: #fff;
+      border-top: 1px solid #e8e8e8;
+      padding: 0 1.6rem; }
+      .list-area > ul > li:after {
+        content: ' ';
+        clear: both;
+        display: table; }
+      .list-area > ul > li > label {
+        float: left;
+        display: block;
+        line-height: 5rem;
+        color: #440f24;
+        font-size: 1.12rem; }
+        .list-area > ul > li > label b {
+          font-size: 1.1em; }
+        .list-area > ul > li > label span {
+          position: absolute;
           display: block;
-          line-height: 5rem;
-          color: #440f24;
-          font-size: 1.12rem; }
-          .list-area > ul > li > label b {
-            font-size: 1.1em; }
-          .list-area > ul > li > label span {
-            position: absolute;
-            display: block;
-            font-size: 0.8rem;
-            color: #bfbfbf;
-            left: 1.6rem;
-            top: 1.5em; }
-        .list-area > ul > li .edit {
-          margin-left: 1rem;
-          line-height: 5rem; } }
-  @media screen and (min-width: 768px) {
-    .list-area > ul {
-      padding: 1.8rem; }
-      .list-area > ul > li {
-        padding: 0.5rem 0 1.4rem;
-        font-size: 1.3rem; }
-        .list-area > ul > li:after {
-          content: ' ';
-          clear: both;
-          display: table; }
-        .list-area > ul > li > label {
+          font-size: 0.8rem;
+          color: #bfbfbf;
+          left: 1.6rem;
+          top: 1.5em; }
+      .list-area > ul > li .edit {
+        margin-left: 1rem;
+        line-height: 5rem; } }
+@media screen and (min-width: 768px) {
+  .list-area > ul {
+    padding: 1.8rem; }
+    .list-area > ul > li {
+      padding: 0.5rem 0 1.4rem;
+      font-size: 1.3rem; }
+      .list-area > ul > li:after {
+        content: ' ';
+        clear: both;
+        display: table; }
+      .list-area > ul > li > label {
+        display: block;
+        margin-right: 1rem;
+        padding: 1px;
+        color: #898989;
+        font-size: 1.1rem;
+        margin-bottom: 0.5em; }
+        .list-area > ul > li > label b {
           display: block;
-          margin-right: 1rem;
-          padding: 1px;
-          color: #898989;
-          font-size: 1.1rem;
-          margin-bottom: 0.5em; }
-          .list-area > ul > li > label b {
-            display: block;
-            font-size: 1.1em; }
-          .list-area > ul > li > label span {
-            display: block;
-            font-size: 0.9em;
-            color: #afafaf;
-            margin-top: 0.4em; }
-        .list-area > ul > li .edit {
-          padding: 1px;
-          height: 3.3rem; } }
+          font-size: 1.1em; }
+        .list-area > ul > li > label span {
+          display: block;
+          font-size: 0.9em;
+          color: #afafaf;
+          margin-top: 0.4em; }
+      .list-area > ul > li .edit {
+        padding: 1px;
+        height: 3.3rem; } }

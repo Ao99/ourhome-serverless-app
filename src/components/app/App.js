@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Header from '../header/Header.js';
+import BarChart from '../chart/BarChart.js';
 import MonthPicker from '../month/MonthPicker.js';
 import Board from '../board/Board.js';
 import Footer from '../footer/Footer.js';
@@ -24,6 +25,7 @@ function App() {
         isSignedin={isSignedin}
         setIsSignedin={setIsSignedin}
       />
+      <BarChart/>
       <MonthPicker
         year={year}
         setYear={setYear}
