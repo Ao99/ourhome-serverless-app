@@ -1,7 +1,22 @@
 .table-responsive{
-  height:600px;  
-  /*overflow:scroll;*/
+  overflow:scroll;
+  max-height: 80vh;
 }
+/*@media screen and (min-width: 356px) {*/
+/*  .table-responsive{*/
+/*    max-height: 76.2vh;*/
+/*  }*/
+/*}*/
+/*@media screen and (min-width: 528px) {*/
+/*  .table-responsive{*/
+/*    max-height: 80.4vh;*/
+/*  }*/
+/*}*/
+/*@media screen and (min-width: 768px) {*/
+/*  .table-responsive{*/
+/*    max-height: 77.5vh;*/
+/*  }*/
+/*}*/
   thead tr:nth-child(1) th{
     background: #343a40;
     position: sticky;
