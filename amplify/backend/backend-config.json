@@ -55,12 +55,6 @@
           }
         }
       ]
-    },
-    "ourhomeFuncEnv": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": []
     }
   },
   "api": {
@@ -79,14 +73,6 @@
         {
           "category": "function",
           "resourceName": "ourhomeFuncSetting",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "ourhomeFuncEnv",
           "attributes": [
             "Name",
             "Arn"

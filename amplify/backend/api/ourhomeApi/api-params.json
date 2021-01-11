@@ -34,23 +34,6 @@
                     "/GET"
                 ]
             }
-        },
-        {
-            "name": "/env",
-            "lambdaFunction": "ourhomeFuncEnv",
-            "privacy": {
-                "protected": true,
-                "auth": [
-                    "/POST",
-                    "/GET",
-                    "/PUT",
-                    "/PATCH",
-                    "/DELETE"
-                ],
-                "unauth": [
-                    "/GET"
-                ]
-            }
         }
     ],
     "resourceName": "ourhomeApi",
@@ -61,9 +44,6 @@
         },
         {
             "lambdaFunction": "ourhomeFuncSetting"
-        },
-        {
-            "lambdaFunction": "ourhomeFuncEnv"
         }
     ],
     "privacy": {
@@ -88,15 +68,7 @@
                 "Name",
                 "Arn"
             ]
-        },
-        {
-            "category": "function",
-            "resourceName": "ourhomeFuncEnv",
-            "attributes": [
-                "Name",
-                "Arn"
-            ]
         }
     ],
-    "uuid": "93f4dbe7"
+    "uuid": "c0415899"
 }
