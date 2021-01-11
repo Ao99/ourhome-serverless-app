@@ -11,21 +11,24 @@ function App() {
   now = new Date(now.getTime() - now.getTimezoneOffset() * 60000); // offset according to time zone
   const nowYear = now.getFullYear();
   const nowMonth = now.getMonth() + 1;
-  // const nowDay = 31;
   const nowDay = now.getDate();
-  
+  const array31Days = Array.from({length: 31}, (_, i) => {return {day: i + 1}});
+
   const [isSignedin, setIsSignedin] = useState(false);
   const [year, setYear] = useState(nowYear);
   const [month, setMonth] = useState(nowMonth);
   const [day, setDay] = useState(nowDay);
-  
+  const [works, setWorks] = useState(array31Days);
+
   return (
     <div className="App">
       <Header
         isSignedin={isSignedin}
         setIsSignedin={setIsSignedin}
       />
-      <BarChart/>
+      <BarChart
+        works={works}
+      />
       <MonthPicker
         year={year}
         setYear={setYear}
@@ -38,6 +41,8 @@ function App() {
         year={year}
         month={month}
         day={day}
+        works={works}
+        setWorks={setWorks}
       />
       <Footer/>
     </div>

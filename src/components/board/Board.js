@@ -9,27 +9,26 @@ import './Board.css';
 function Board(props) {
   const yearMonth = '' + props.year + (props.month < 10 ? '0' : '') + props.month;
   const numDays = new Date(props.year, props.month, 0).getDate();
-  const array31Days = Array.from({length: 31}, (_, i) => {return {day: i + 1}});
 
   const tBodyRef = useRef(null);
 
+  const [isScrolled, setIsScrolled] = useState(false);
   const [workTypes, setWorkTypes] = useState([]);
-  const [works, setWorks] = useState(array31Days);
   const [showAdd, setShowAdd] = useState(false);
   const [showDel, setShowDel] = useState(false);
   const [workTypeIdx, setWorkTypeIdx] = useState(-1);
 
   useEffect(() => {
-    scrollTo(props.day);
-  }, [props]);
+    scrollTo(props.day, numDays);
+  }, [props.day, numDays, isScrolled]);
   
   useEffect(() => {
     fetchWorkTypes();
   }, []);
   
   useEffect(() => {
-    fetchWorks(yearMonth, numDays);
-  }, [yearMonth, numDays]);
+    fetchWorks(yearMonth, numDays, isScrolled, props.setWorks);
+  }, [yearMonth, numDays, isScrolled, props.setWorks]);
   
   function scrollTo(day, numDays) {
     if(day > numDays-2) day = numDays-2;
@@ -64,7 +63,7 @@ function Board(props) {
   /*
    * start of work
    */
-  async function fetchWorks(yearMonth, numDays) {
+  async function fetchWorks(yearMonth, numDays, isScrolled, setWorks) {
     try {
       var works = (await getWorksByMonth(yearMonth)).Items;
       
@@ -83,12 +82,14 @@ function Board(props) {
     } catch(err) {
       setWorks([]);
     }
+    
+    if(!isScrolled) setIsScrolled(true);
   }
   
   async function updateWork(day, workType) {
     if (!props.isSignedin) return;
     await updateOneWork(yearMonth, day, workType);
-    fetchWorks(yearMonth, numDays);
+    fetchWorks(yearMonth, numDays, isScrolled, props.setWorks);
   }
   // end of work
 
@@ -129,7 +130,7 @@ function Board(props) {
         </thead>
         <tbody id="tbody" ref={tBodyRef}>
           {
-            works.map(work => (
+            props.works.map(work => (
               <tr key={work.day} >
                 <td>{props.month}-{work.day}</td>
                 {

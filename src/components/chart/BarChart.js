@@ -1,18 +1,39 @@
 import { useState, useEffect } from 'react';
-import Chart from 'react-apexcharts'
+import Chart from 'react-apexcharts';
 
-function BarChart() {
-  const percentages = useState({});
-  var series = [{
-      name: 'ao',
-      data: [20]
-    }, {
-      name: 'shan',
-      data: [23]
-    }, {
-      name: 'test',
-      data: [5]
-    }];
+function BarChart(props) {
+  const [series, setSeries] = useState([]);
+  
+  useEffect(() => {
+    countWorks(props.works);
+  }, [props.works]);
+  
+  function countWorks(works) {
+    var counts = {};
+    
+    works.forEach(work => {
+      Object.keys(work).forEach(key => {
+        if(key !== 'month' && key !== 'day' && key !== 'updatedAt') {
+          var users = work[key];
+          users.forEach(user => {
+            counts[user] = (counts[user] ? counts[user] : 0) + 1;
+          });
+        }
+      });
+    });
+    
+    var series = [];
+    Object.keys(counts).forEach(user => {
+      series.push({
+        name: user,
+        data: [counts[user]]
+      });
+    });
+    series.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)); 
+
+    setSeries(series);
+  }
+    
   var options = {
     chart: {
       stacked: true,
@@ -20,6 +41,7 @@ function BarChart() {
       toolbar: { show: false }
     },
     theme: { mode: 'dark' },
+    colors: ['#FF9800', '#2E93fA', '#66DA26', '#546E7A', '#E91E63'],
     plotOptions: {
       bar: { horizontal: true, barHeight: '100%' }
     },
@@ -47,10 +69,7 @@ function BarChart() {
       position: 'top',
       horizontalAlign: 'left',
       offsetX: 5,
-      markers: {
-        width: 20,
-        height: 15
-      }
+      markers: { width: 20, height: 15 }
     }
   };
   
