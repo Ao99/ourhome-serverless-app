@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
 import { updateOneSetting } from '../../services/SettingService.js';
 
 export function AddWorkType(props) {
@@ -18,7 +18,6 @@ export function AddWorkType(props) {
         <Modal.Title>Add a work type</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Name of the new work type:</p>
         <input
           onChange={e => setNewWorkType(e.target.value)}
           placeholder="Work type"
@@ -26,12 +25,16 @@ export function AddWorkType(props) {
         />
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => props.setShowAdd(false)}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={addWorkType}>
-          Confirm
-        </Button>
+        <Container fluid>
+          <Row>
+            <Col>
+              <Button size="lg" block variant="secondary" onClick={() => props.setShowAdd(false)}>Close          </Button>
+            </Col>
+            <Col>
+              <Button size="lg" block variant="primary" onClick={addWorkType}>Delete</Button>
+            </Col>
+          </Row>
+        </Container>
       </Modal.Footer>
     </Modal>
   );
@@ -54,12 +57,16 @@ export function DelWorkType(props) {
         <p>Do you want to delete the work type "{props.workTypes[props.workTypeIdx]}"?</p>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => props.setShowDel(false)}>
-          Close
-        </Button>
-        <Button variant="danger" onClick={deleteWorkType}>
-          Delete
-        </Button>
+        <Container fluid>
+          <Row>
+            <Col><Button size="lg" block variant="secondary" onClick={() => props.setShowDel(false)}>
+            Close
+          </Button></Col>
+            <Col><Button size="lg" block variant="danger" onClick={deleteWorkType}>
+            Delete
+          </Button></Col>
+          </Row>
+        </Container>
       </Modal.Footer>
     </Modal>
   );
