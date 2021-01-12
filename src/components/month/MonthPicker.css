@@ -259,6 +259,10 @@ li,ul{list-style-type: none;}
   .month-picker .tab.btn.next:before {
     content: ""; }
 
+.list-area {
+  margin-top: -15px;
+  margin-bottom: 5px;
+}
 @media screen and (min-width: 768px) {
   .list-area {
     width: 500px;

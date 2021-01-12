@@ -3,14 +3,14 @@ import Chart from 'react-apexcharts';
 
 function BarChart(props) {
   const [series, setSeries] = useState([]);
+  const [barColors, setBarColors] = useState([]);
   
   useEffect(() => {
-    countWorks(props.works);
-  }, [props.works]);
+    setCountsAndColors(props.works, props.colors);
+  }, [props.works, props.colors]);
   
-  function countWorks(works) {
+  function setCountsAndColors(works, colors) {
     var counts = {};
-    
     works.forEach(work => {
       Object.keys(work).forEach(key => {
         if(key !== 'month' && key !== 'day' && key !== 'updatedAt') {
@@ -26,12 +26,23 @@ function BarChart(props) {
     Object.keys(counts).forEach(user => {
       series.push({
         name: user,
-        data: [counts[user]]
+        data: [counts[user]],
+        color: colors[user]
       });
     });
-    series.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)); 
-
+    series.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+    
     setSeries(series);
+    
+    var barColors = [];
+    series.forEach(e => {
+      barColors.push(e['color']);
+    });
+
+    setBarColors(barColors);
+
+    console.log(series);
+    console.log(barColors);
   }
     
   var options = {
@@ -41,7 +52,7 @@ function BarChart(props) {
       toolbar: { show: false }
     },
     theme: { mode: 'dark' },
-    colors: ['#FF9800', '#2E93fA', '#66DA26', '#546E7A', '#E91E63'],
+    colors: barColors,
     plotOptions: {
       bar: { horizontal: true, barHeight: '100%' }
     },
@@ -65,11 +76,11 @@ function BarChart(props) {
     },
     fill: { opacity: 1 },
     legend: {
-      fontSize: '18rem',
+      fontSize: '20rem',
       position: 'top',
       horizontalAlign: 'left',
       offsetX: 5,
-      markers: { width: 20, height: 15 }
+      markers: { width: 25, height: 18 }
     }
   };
   

@@ -1,6 +1,6 @@
 // import { Auth } from 'aws-amplify';
 import { Authenticator, SignIn, SignUp, ConfirmSignUp, Greetings } from 'aws-amplify-react';
-import { Navbar, } from 'react-bootstrap';
+import { Navbar } from 'react-bootstrap';
 import '@aws-amplify/ui/dist/style.css';
 
 function Header(props) {

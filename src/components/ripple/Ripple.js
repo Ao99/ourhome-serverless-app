@@ -25,6 +25,7 @@ function Ripple(props) {
         setCoords({ x: e.clientX - rect.left, y: e.clientY - rect.top });
         props.onClick && props.onClick(e);
       }}
+      style={props.style}
     >
       {isRippling ? (
         <span

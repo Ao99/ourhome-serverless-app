@@ -27,8 +27,8 @@ function Board(props) {
   }, []);
   
   useEffect(() => {
-    fetchWorks(yearMonth, numDays, isScrolled, props.setWorks);
-  }, [yearMonth, numDays, isScrolled, props.setWorks]);
+    fetchWorks(yearMonth, numDays, props.setWorks);
+  }, [yearMonth, numDays, props.setWorks]);
   
   function scrollTo(day, numDays) {
     if(day > numDays-2) day = numDays-2;
@@ -63,7 +63,7 @@ function Board(props) {
   /*
    * start of work
    */
-  async function fetchWorks(yearMonth, numDays, isScrolled, setWorks) {
+  async function fetchWorks(yearMonth, numDays, setWorks) {
     try {
       var works = (await getWorksByMonth(yearMonth)).Items;
       
@@ -83,15 +83,40 @@ function Board(props) {
       setWorks([]);
     }
     
-    if(!isScrolled) setIsScrolled(true);
+    // trigger scrollTo() once
+    setIsScrolled(true);
   }
   
   async function updateWork(day, workType) {
     if (!props.isSignedin) return;
     await updateOneWork(yearMonth, day, workType);
-    fetchWorks(yearMonth, numDays, isScrolled, props.setWorks);
+    fetchWorks(yearMonth, numDays, props.setWorks);
   }
   // end of work
+  
+  /*
+   * start of color
+   */
+  function getBgColors(work, workType) {
+    var users = work[workType];
+    var bgColors = {};
+
+    if(users && users.length > 0) {
+      if(users.length > 1) {
+        var colors = 'linear-gradient(to right';
+        users.forEach(user => {
+          colors += (',' + props.colors[user]);
+        });
+        colors += ')';
+      } else {
+        colors = props.colors[users[0]];
+      }
+      bgColors = {background: colors};
+    }
+    
+    return bgColors;
+  }
+  // end of color
 
   return (
     <div>
@@ -135,8 +160,14 @@ function Board(props) {
                 <td>{props.month}-{work.day}</td>
                 {
                   workTypes.map(workType => (
-                    <Ripple customTag="td" className={work[workType] && work[workType].length>0 ? "filled" : "empty"} key={workType} onClick={() => updateWork(work.day, workType)}>
-                      {work[workType] ? work[workType].map(username => username + ' ') : ''}
+                    <Ripple
+                      customTag="td"
+                      className={work[workType] && work[workType].length>0 ? "filled" : "empty"}
+                      key={workType}
+                      onClick={() => updateWork(work.day, workType)}
+                      style={getBgColors(work, workType)}
+                    >
+                        {work[workType] ? work[workType].map(username => username + ' ') : ''}
                     </Ripple>
                   ))
                 }
