@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import Ripple from '../ripple/Ripple.js';
-import { getSettingsByType } from '../../services/SettingService.js';
+import { getAllWorkTypes } from '../../services/WorkTypeService.js';
 import { getWorksByMonth, updateOneWork } from '../../services/WorkService.js';
 import { AddWorkType, DelWorkType } from './UpdateWorkTypes.js';
 import './Board.css';
@@ -40,12 +40,7 @@ function Board(props) {
    * start of workType
    */
   async function fetchWorkTypes() {
-    try {
-      var allWorkTypes = (await getSettingsByType('workTypes')).Items[0].allUsers;
-      setWorkTypes(allWorkTypes);
-    } catch(err) {
-      setWorkTypes([]);
-    }
+      setWorkTypes(await getAllWorkTypes());
   }
   
   function handleShowAdd() {
@@ -64,24 +59,20 @@ function Board(props) {
    * start of work
    */
   async function fetchWorks(yearMonth, numDays, setWorks) {
-    try {
-      var works = (await getWorksByMonth(yearMonth)).Items;
-      
-      // DB may only contains records for some days, e.g. day 1, 3, 7, 8, 11, ...
-      // fill the missing days with empty work
-      var worksFullMonth = [];
-      for(var i=0, j=0; i<numDays; i++){
-        if(j < works.length && works[j].day === i + 1) {
-          worksFullMonth.push(works[j]);
-          j++;
-        } else {
-          worksFullMonth.push({ day: i+1 });
-        }
+    var works = await getWorksByMonth(yearMonth);
+    
+    // DB may only contains records for some days, e.g. day 1, 3, 7, 8, 11, ...
+    // fill the missing days with empty work
+    var worksFullMonth = [];
+    for(var i=0, j=0; i<numDays; i++){
+      if(j < works.length && works[j].day === i + 1) {
+        worksFullMonth.push(works[j]);
+        j++;
+      } else {
+        worksFullMonth.push({ day: i+1 });
       }
-      setWorks(worksFullMonth);
-    } catch(err) {
-      setWorks([]);
     }
+    setWorks(worksFullMonth);
     
     // trigger scrollTo() once
     setIsScrolled(true);

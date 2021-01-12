@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
-import { updateOneSetting } from '../../services/SettingService.js';
+import { updateWorkTypes } from '../../services/WorkTypeService.js';
 
 export function AddWorkType(props) {
   const [newWorkType, setNewWorkType] = useState('');
   async function addWorkType() {
     props.workTypes.push(newWorkType);
-    await updateOneSetting('workTypes', props.workTypes, true);
+    await updateWorkTypes(props.workTypes);
     props.setShowAdd(false);
     setNewWorkType('');
     props.fetchWorkTypes();
@@ -43,7 +43,7 @@ export function AddWorkType(props) {
 export function DelWorkType(props) {
   async function deleteWorkType() {
     props.workTypes.splice(props.workTypeIdx, 1);
-    await updateOneSetting('workTypes', props.workTypes, true);
+    await updateWorkTypes(props.workTypes);
     props.setShowDel(false);
     props.fetchWorkTypes();
   }
