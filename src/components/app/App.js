@@ -19,7 +19,7 @@ function App() {
   const [month, setMonth] = useState(nowMonth);
   const [day, setDay] = useState(nowDay);
   const [works, setWorks] = useState(array31Days);
-  const [colors, setColors] = useState({ ao: '#fd7e14', shan: '#17a2b8', test: 'grey'});
+  const [colors, setColors] = useState({ ao: '#fd7e14', shan: '#17a2b8', test: '#28a745'});
 
   return (
     <div className="App">
