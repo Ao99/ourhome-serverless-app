@@ -34,7 +34,7 @@
   --button-click: var(--darkAmazonOrange);
   --link-color: var(--amazonOrange);
   --form-color: var(--squidInk);
-  --input-color: var(--deepSquidInk);
+  --input-color: var(--squidInk);
   --input-background-color: var(--white);
 
   --font-family: "Amazon Ember","Helvetica Neue Light","Helvetica Neue","Helvetica" ,"Arial","sans-serif";
