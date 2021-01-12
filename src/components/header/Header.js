@@ -1,7 +1,7 @@
 // import { Auth } from 'aws-amplify';
 import { Authenticator, SignIn, SignUp, ConfirmSignUp, Greetings } from 'aws-amplify-react';
-import { Navbar, } from 'react-bootstrap';
-import '@aws-amplify/ui/dist/style.css';
+import { Navbar } from 'react-bootstrap';
+import './Header.css';
 
 function Header(props) {
   // async function checkUser() {
@@ -39,7 +39,7 @@ function Header(props) {
             props.isSignedin ? null
                             : <Navbar.Text>Test with username "test" and password "test1234".</Navbar.Text>
           }
-          <Authenticator hideDefault={true} onStateChange={handleAuthStateChange} >
+          <Authenticator hideDefault={true} onStateChange={handleAuthStateChange}>
             <SignIn/>
             <SignUp/>
             <ConfirmSignUp/>
