@@ -31,7 +31,7 @@ export function AddWorkType(props) {
               <Button size="lg" block variant="secondary" onClick={() => props.setShowAdd(false)}>Close          </Button>
             </Col>
             <Col>
-              <Button size="lg" block variant="primary" onClick={addWorkType}>Delete</Button>
+              <Button size="lg" block variant="primary" onClick={addWorkType}>Add</Button>
             </Col>
           </Row>
         </Container>
@@ -59,12 +59,12 @@ export function DelWorkType(props) {
       <Modal.Footer>
         <Container fluid>
           <Row>
-            <Col><Button size="lg" block variant="secondary" onClick={() => props.setShowDel(false)}>
-            Close
-          </Button></Col>
-            <Col><Button size="lg" block variant="danger" onClick={deleteWorkType}>
-            Delete
-          </Button></Col>
+            <Col>
+              <Button size="lg" block variant="secondary" onClick={() => props.setShowDel(false)}>Close</Button>
+            </Col>
+            <Col>
+              <Button size="lg" block variant="danger" onClick={deleteWorkType}>Delete</Button>
+            </Col>
           </Row>
         </Container>
       </Modal.Footer>
