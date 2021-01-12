@@ -34,7 +34,7 @@ exports.handler = async (event, context) => {
                 break;
             case 'POST':
                 var reqBody = JSON.parse(event.body);
-                var username = reqBody.isForAllUsers ? 'allUsers' : (await getUser(event)).username;
+                var username = reqBody.isForAllUsers ? 'allUsers' : (await getUser(event)).Username;
                 var now = new Date(new Date().getTime() - (300 * 60000)).toISOString();
 
                 body = await dynamo.update(
