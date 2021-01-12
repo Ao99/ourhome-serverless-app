@@ -60,7 +60,7 @@ function Board(props) {
    */
   async function fetchWorks(yearMonth, numDays, setWorks) {
     var works = await getWorksByMonth(yearMonth);
-    
+
     // DB may only contains records for some days, e.g. day 1, 3, 7, 8, 11, ...
     // fill the missing days with empty work
     var worksFullMonth = [];
