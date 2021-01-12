@@ -3,12 +3,9 @@ import { get, post } from '../utils/REST.js';
 const apiName = 'ourhomeApi';
 const path = '/work';
 
-export async function getWorksByMonth(month) {
-  try {
-    return (await get(apiName, `${path}/${month}`)).Items;
-  } catch(err) {
-    return [];
-  }  
+export function getWorksByMonth(month) {
+  return get(apiName, `${path}/${month}`)
+    .then(res => res.Items);
 }
 
 export function updateOneWork(month, day, workType) {
