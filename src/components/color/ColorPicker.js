@@ -25,6 +25,7 @@ function ColorPicker(props) {
   return (
     <div>
       <Button size="lg" block variant="secondary" onClick={() => setShow(true)}>Color</Button>
+
       <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Set my color</Modal.Title>
@@ -36,8 +37,13 @@ function ColorPicker(props) {
             placeholder="My color"
             value={color}
             className="mt-3 ml-3"
-            readonly="readonly"
+            readOnly="readonly"
           />
+          {
+            props.isSignedin
+              ? null
+              : <p className="mt-3 ml-3">Please login to change your color.</p>
+          }
         </Modal.Body>
         <Modal.Footer>
           <Container fluid>
@@ -46,7 +52,11 @@ function ColorPicker(props) {
                 <Button size="lg" block variant="secondary" onClick={() => setShow(false)}>Close</Button>
               </Col>
               <Col>
-                <Button size="lg" block variant="primary" onClick={updateColor}>Confirm</Button>
+                {
+                  props.isSignedin
+                    ? <Button size="lg" block variant="primary" onClick={updateColor}>Confirm</Button>
+                    : <Button size="lg" block variant="primary" disabled>Confirm</Button>
+                }
               </Col>
             </Row>
           </Container>

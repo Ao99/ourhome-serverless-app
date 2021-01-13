@@ -35,6 +35,7 @@ function App() {
         <Row>
           <Col xs={4} sm={4} md={2}>
             <ColorPicker
+              isSignedin={isSignedin}
               colors={colors}
               setColors={setColors}
             />
