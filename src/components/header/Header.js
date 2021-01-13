@@ -38,7 +38,8 @@ function Header(props) {
           {
             props.isSignedin ? null
                             : <Navbar.Text>
-                                Test with <span style={{color: 'white'}}><b>test</b></span> and <span style={{color: 'white'}}><b>pass1234</b></span>
+                                <p>Sign up is disabled.</p>
+                                <p>Test with <span style={{color: 'white'}}><b>test</b></span> and <span style={{color: 'white'}}><b>pass1234</b></span></p>
                               </Navbar.Text>
           }
           <Authenticator hideDefault={true} onStateChange={handleAuthStateChange}>
