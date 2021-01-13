@@ -31,10 +31,6 @@ function App() {
         colors={colors}
         setColors={setColors}
       />
-      <BarChart
-        works={works}
-        colors={colors}
-      />
       <Container fluid className="mb-3">
         <Row>
           <Col xs={4}>
@@ -54,6 +50,10 @@ function App() {
           </Col>
         </Row>
       </Container>
+      <BarChart
+        works={works}
+        colors={colors}
+      />
       <Board
         isSignedin={isSignedin}
         year={year}

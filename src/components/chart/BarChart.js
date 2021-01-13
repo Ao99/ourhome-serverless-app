@@ -84,8 +84,8 @@ function BarChart(props) {
   };
   
   return (
-    <div id="chart">
-      <Chart options={options} series={series} type="bar" height={150} />
+    <div id="chart" className="mb-n3 ml-n3">
+      <Chart options={options} series={series} type="bar" height={135} />
     </div>
   );
 }
