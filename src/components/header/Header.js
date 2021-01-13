@@ -37,7 +37,9 @@ function Header(props) {
         <Navbar.Collapse className="justify-content-end" id="responsive-navbar-nav">
           {
             props.isSignedin ? null
-                            : <Navbar.Text>Test with username "test" and password "test1234".</Navbar.Text>
+                            : <Navbar.Text>
+                                Test with <span style={{color: 'white'}}><b>test</b></span> and <span style={{color: 'white'}}><b>pass1234</b></span>
+                              </Navbar.Text>
           }
           <Authenticator hideDefault={true} onStateChange={handleAuthStateChange}>
             <SignIn/>
