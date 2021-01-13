@@ -20,7 +20,7 @@
   thead tr:nth-child(1) th{
     background: #343a40;
     position: sticky;
-    top: 0;
+    top: -2px;
     z-index: 3;
   }
   thead tr:nth-child(1) th:first-child

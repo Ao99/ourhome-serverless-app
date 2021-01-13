@@ -35,20 +35,18 @@ function MonthPicker(props) {
   }
 
   return (
-    <div className="list-area" >
-      <div className="edit">
-        <Picker
-          ref={pickAMonth}
-          years={years}
-          value={mValue}
-          lang={pickerLang.months}
-          onChange={handleAMonthChange}
-        >
-          <Button variant="secondary" size="lg" block onClick={handleClickMonthBox}>
-            {makeText(mValue)}
-          </Button>
-        </Picker>
-      </div>
+    <div className="list-area edit" >
+      <Picker
+        ref={pickAMonth}
+        years={years}
+        value={mValue}
+        lang={pickerLang.months}
+        onChange={handleAMonthChange}
+      >
+      </Picker>
+      <Button variant="secondary" size="lg" block onClick={handleClickMonthBox}>
+        {makeText(mValue)}
+      </Button>
     </div>
   );
 }

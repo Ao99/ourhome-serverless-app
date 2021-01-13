@@ -55,11 +55,10 @@ function BarChart(props) {
     plotOptions: {
       bar: { horizontal: true, barHeight: '100%' }
     },
-    stroke: {
-      width: 1,
-      colors: ['#fff']
-    },
     grid: { show: false },
+    stroke: {
+        show: false 
+    },
     xaxis: {
       categories: ['Work count'],
       labels: { show: false },

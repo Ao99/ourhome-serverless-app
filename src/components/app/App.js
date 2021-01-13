@@ -33,13 +33,13 @@ function App() {
       />
       <Container fluid className="mb-3">
         <Row>
-          <Col xs={4}>
+          <Col xs={4} sm={4} md={2}>
             <ColorPicker
               colors={colors}
               setColors={setColors}
             />
           </Col>
-          <Col xs={8}>
+          <Col xs={8} sm={8} md={10}>
             <MonthPicker
               year={year}
               setYear={setYear}
