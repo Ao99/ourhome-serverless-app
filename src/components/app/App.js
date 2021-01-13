@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import Header from '../header/Header.js';
 import BarChart from '../chart/BarChart.js';
+import ColorPicker from '../color/ColorPicker.js';
 import MonthPicker from '../month/MonthPicker.js';
 import Board from '../board/Board.js';
 import Footer from '../footer/Footer.js';
+import { Container, Row, Col } from 'react-bootstrap';
 import './App.css';
 
 function App() {
@@ -19,7 +21,7 @@ function App() {
   const [month, setMonth] = useState(nowMonth);
   const [day, setDay] = useState(nowDay);
   const [works, setWorks] = useState(array31Days);
-  const [colors, setColors] = useState({ ao: '#fd7e14', shan: '#17a2b8', test: '#28a745'});
+  const [colors, setColors] = useState({});
 
   return (
     <div className="App">
@@ -33,13 +35,25 @@ function App() {
         works={works}
         colors={colors}
       />
-      <MonthPicker
-        year={year}
-        setYear={setYear}
-        month={month}
-        setMonth={setMonth}
-        setDay={setDay}
-      />
+      <Container fluid className="mb-3">
+        <Row>
+          <Col xs={4}>
+            <ColorPicker
+              colors={colors}
+              setColors={setColors}
+            />
+          </Col>
+          <Col xs={8}>
+            <MonthPicker
+              year={year}
+              setYear={setYear}
+              month={month}
+              setMonth={setMonth}
+              setDay={setDay}
+            />
+          </Col>
+        </Row>
+      </Container>
       <Board
         isSignedin={isSignedin}
         year={year}

@@ -28,7 +28,7 @@ export function AddWorkType(props) {
         <Container fluid>
           <Row>
             <Col>
-              <Button size="lg" block variant="secondary" onClick={() => props.setShowAdd(false)}>Close          </Button>
+              <Button size="lg" block variant="secondary" onClick={() => props.setShowAdd(false)}>Close</Button>
             </Col>
             <Col>
               <Button size="lg" block variant="primary" onClick={addWorkType}>Add</Button>

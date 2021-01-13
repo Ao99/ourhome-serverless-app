@@ -10,6 +10,8 @@ function BarChart(props) {
   }, [props.works, props.colors]);
   
   function setCountsAndColors(works, colors) {
+    if(colors.size === 0) return;
+    
     var counts = {};
     works.forEach(work => {
       Object.keys(work).forEach(key => {
@@ -40,9 +42,6 @@ function BarChart(props) {
     });
 
     setBarColors(barColors);
-
-    console.log(series);
-    console.log(barColors);
   }
     
   var options = {
