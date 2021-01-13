@@ -43,8 +43,6 @@ function Header(props) {
           }
           <Authenticator hideDefault={true} onStateChange={handleAuthStateChange}>
             <SignIn/>
-            <SignUp/>
-            <ConfirmSignUp/>
             <Greetings/>
           </Authenticator>
         </Navbar.Collapse>
