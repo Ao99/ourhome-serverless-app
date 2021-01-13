@@ -37,16 +37,3 @@
     left: 0;
     z-index: 3;
   }
-  
-/*filled or empty*/
-.filled:hover {
-    border-color: #EC7063;
-    color: #EC7063;
-    cursor: pointer;
-}
-
-.empty:hover {
-    border-color: #45B39D;
-    color: #45B39D;
-    cursor: pointer;
-}

@@ -134,7 +134,7 @@ function Board(props) {
             <th>Date</th>
             {
               workTypes.map((workType, index) => (
-                <Ripple customTag="th" className="filled" key={workType} onClick={() => handleShowDel(index)}>
+                <Ripple customTag="th" key={workType} onClick={() => handleShowDel(index)}>
                   {workType}
                 </Ripple>
               ))
@@ -153,7 +153,6 @@ function Board(props) {
                   workTypes.map(workType => (
                     <Ripple
                       customTag="td"
-                      className={work[workType] && work[workType].length>0 ? "filled" : "empty"}
                       key={workType}
                       onClick={() => updateWork(work.day, workType)}
                       style={getBgColors(work, workType)}
