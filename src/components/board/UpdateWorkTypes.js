@@ -33,7 +33,7 @@ export function AddWorkType(props) {
               <Button size="lg" block variant="secondary" onClick={() => props.setShowAdd(false)}>Close</Button>
             </Col>
             <Col>
-              <Button size="lg" block variant="primary" onClick={addWorkType}>Add</Button>
+              <Button size="lg" block variant="success" onClick={addWorkType}>Add</Button>
             </Col>
           </Row>
         </Container>
