@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
+import { Modal, Alert, Container, Row, Col, Button } from 'react-bootstrap';
+import { Auth } from 'aws-amplify';
 import { updateWorkTypes } from '../../services/WorkTypeService.js';
 
 export function AddWorkType(props) {
   const [newWorkType, setNewWorkType] = useState('');
+
   async function addWorkType() {
     props.workTypes.push(newWorkType);
     await updateWorkTypes(props.workTypes);
@@ -41,11 +43,18 @@ export function AddWorkType(props) {
 }
 
 export function DelWorkType(props) {
+  const [show, setShow] = useState(false);
+
   async function deleteWorkType() {
-    props.workTypes.splice(props.workTypeIdx, 1);
-    await updateWorkTypes(props.workTypes);
-    props.setShowDel(false);
-    props.fetchWorkTypes();
+    var username = (await Auth.currentAuthenticatedUser()).username;
+    if(username === 'test'){
+      setShow(true);
+    } else {
+      props.workTypes.splice(props.workTypeIdx, 1);
+      await updateWorkTypes(props.workTypes);
+      props.setShowDel(false);
+      props.fetchWorkTypes();
+    }
   }
   
   return (
@@ -55,6 +64,12 @@ export function DelWorkType(props) {
       </Modal.Header>
       <Modal.Body>
         <p>Do you want to delete the work type "{props.workTypes[props.workTypeIdx]}"?</p>
+        {
+          show ? <Alert variant="warning" onClose={() => setShow(false)} dismissible>
+                      The test user cannot delete a work type!
+                    </Alert>
+                  : null
+        }
       </Modal.Body>
       <Modal.Footer>
         <Container fluid>
