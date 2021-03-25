@@ -32,7 +32,7 @@ function BarChart(props) {
       series.push({
         name: user,
         data: [counts[user]],
-        color: colors[user]
+        color: colors[user] ? colors[user] : '#808080'
       });
     });
     series.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
@@ -42,7 +42,7 @@ function BarChart(props) {
     
     var barColors = [];
     series.forEach(e => {
-      barColors.push(e['color']);
+      barColors.push(e.color);
     });
 
     console.log(barColors);
