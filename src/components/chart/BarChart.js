@@ -37,7 +37,6 @@ function BarChart(props) {
     });
     series.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
     
-    console.log(series);
     setSeries(series);
     
     var barColors = [];
@@ -45,7 +44,6 @@ function BarChart(props) {
       barColors.push(e.color);
     });
 
-    console.log(barColors);
     setBarColors(barColors);
   }
     
