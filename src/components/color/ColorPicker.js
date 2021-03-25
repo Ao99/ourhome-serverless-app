@@ -8,12 +8,12 @@ function ColorPicker(props) {
   const [color, setColor] = useState('');
   
   useEffect(() => {
-    fetchColors();
-  }, []);
+    fetchColors(props.setColors);
+  }, [props.setColors]);
   
-  async function fetchColors() {
+  async function fetchColors(setColors) {
     var allColors = await getAllColors();
-    props.setColors(allColors);
+    setColors(allColors);
   }
   
   async function updateColor() {
