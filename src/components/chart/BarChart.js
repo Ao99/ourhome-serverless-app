@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Chart from 'react-apexcharts';
+import { getWeights } from '../../services/WeightService.js';
 
 function BarChart(props) {
   const [series, setSeries] = useState([]);
@@ -9,16 +10,18 @@ function BarChart(props) {
     setCountsAndColors(props.works, props.colors);
   }, [props.works, props.colors]);
   
-  function setCountsAndColors(works, colors) {
+  async function setCountsAndColors(works, colors) {
     if(colors.size === 0) return;
-    
+
+    var weights = await getWeights();   
     var counts = {};
     works.forEach(work => {
       Object.keys(work).forEach(key => {
         if(key !== 'month' && key !== 'day' && key !== 'updatedAt') {
           var users = work[key];
           users.forEach(user => {
-            counts[user] = (counts[user] ? counts[user] : 0) + 1;
+            counts[user] = (counts[user] ? counts[user] : 0)
+                         + (weights[key] ? weights[key] : 1);
           });
         }
       });
@@ -29,7 +32,7 @@ function BarChart(props) {
       series.push({
         name: user,
         data: [counts[user]],
-        color: colors[user]
+        color: colors[user] ? colors[user] : '#808080'
       });
     });
     series.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
@@ -38,7 +41,7 @@ function BarChart(props) {
     
     var barColors = [];
     series.forEach(e => {
-      barColors.push(e['color']);
+      barColors.push(e.color);
     });
 
     setBarColors(barColors);
